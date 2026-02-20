@@ -2,3 +2,5 @@ bin/
 obj/
 *.user
 /.vs
+/src/Modules/Inventory/AutoDealerPro.Modules.Inventory.Infrastructure/.vs/AutoDealerPro.Modules.Inventory.Infrastructure
+*.tmp
