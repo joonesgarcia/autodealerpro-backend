@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Modules\IModule.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Modules\IModule.cs" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.13" />
   </ItemGroup>
 
 </Project>

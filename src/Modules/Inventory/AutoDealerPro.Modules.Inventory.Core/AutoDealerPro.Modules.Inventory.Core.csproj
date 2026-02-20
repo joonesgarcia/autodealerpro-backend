@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../../Shared/AutoDealerPro.Shared.Kernel/AutoDealerPro.Shared.Kernel.csproj" />
+  </ItemGroup>
+
 </Project>
