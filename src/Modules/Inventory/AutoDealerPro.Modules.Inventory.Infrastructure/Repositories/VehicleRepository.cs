@@ -13,7 +13,9 @@ public class VehicleRepository(InventoryDbContext context) : IVehicleRepository
         => await _context.Vehicles.FindAsync(id);
 
     public async Task<Vehicle?> GetByPlateAsync(string plateNumber)
-        => await _context.Vehicles.FirstOrDefaultAsync(v => v.PlateNumber.Equals(plateNumber, StringComparison.CurrentCultureIgnoreCase));
+        => await _context.Vehicles
+            .FirstOrDefaultAsync(v => v.PlateNumber.ToLower() == plateNumber.ToLower());
+
 
     public async Task<IEnumerable<Vehicle>> GetAvailableAsync(int page, int pageSize)
     {
@@ -31,10 +33,10 @@ public class VehicleRepository(InventoryDbContext context) : IVehicleRepository
         var query = _context.Vehicles.Where(v => v.Status == VehicleStatus.Available);
 
         if (!string.IsNullOrEmpty(filter.Make))
-            query = query.Where(v => v.Make.Equals(filter.Make, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(v => v.Make.ToLower() == filter.Make.ToLower());
 
         if (!string.IsNullOrEmpty(filter.Model))
-            query = query.Where(v => v.Model.Contains(filter.Model, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(v => v.Model.ToLower().Contains(filter.Model.ToLower()));
 
         if (filter.MinYear.HasValue)
             query = query.Where(v => v.Year >= filter.MinYear.Value);
@@ -49,17 +51,16 @@ public class VehicleRepository(InventoryDbContext context) : IVehicleRepository
             query = query.Where(v => v.Mileage <= filter.MaxMileage.Value);
 
         if (!string.IsNullOrEmpty(filter.BodyType))
-            query = query.Where(v => v.BodyType.Equals(filter.BodyType, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(v => v.BodyType.ToLower() == filter.BodyType.ToLower());
 
         if (!string.IsNullOrEmpty(filter.FuelType))
-            query = query.Where(v => v.FuelType.Equals(filter.FuelType, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(v => v.FuelType.ToLower() == filter.FuelType.ToLower());
 
         return await query
             .OrderByDescending(v => v.CreatedAt)
             .Take(50)
             .ToListAsync();
     }
-
     public async Task<Vehicle> AddAsync(Vehicle vehicle)
     {
         await _context.Vehicles.AddAsync(vehicle);

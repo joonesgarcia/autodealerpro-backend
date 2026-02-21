@@ -5,7 +5,7 @@ public record VehicleDetailDto(
     string Make,
     string Model,
     int Year,
-    string PlateNumberVIN,
+    string PlateNumber,
     string Trim,
     int Mileage,
     string ExteriorColor,

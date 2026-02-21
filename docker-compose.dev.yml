@@ -16,18 +16,5 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
-    build:
-      context: .                              # Build from root
-      dockerfile: src/AutoDealerPro.Api/Dockerfile
-    container_name: autodealerpro-api
-    ports:
-      - "5000:80"
-    environment:
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=autodealerpro;Username=postgres;Password=postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
-
 volumes:
   postgres-data:

@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDealerPro.Modules.Inven
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDealerPro.Modules.Inventory.Application", "src\Modules\Inventory\AutoDealerPro.Modules.Inventory.Application\AutoDealerPro.Modules.Inventory.Application.csproj", "{CB62B93A-8B69-4AC4-A937-EA4323C0064C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.dev.yml = docker-compose.dev.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -43,7 +43,7 @@ public class Vehicle : EntityBase
     {
         // Simple validations
         if (string.IsNullOrWhiteSpace(plateNumber) || plateNumber.Length != 7)
-            throw new ArgumentException("VIN must be 7 characters");
+            throw new ArgumentException("plateNumber must be 7 characters");
 
         if (year < 1990 || year > DateTime.UtcNow.Year + 1)
             throw new ArgumentException("Invalid year");
