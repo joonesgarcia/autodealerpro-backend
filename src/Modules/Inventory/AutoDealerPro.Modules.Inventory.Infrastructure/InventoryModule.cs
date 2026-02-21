@@ -2,6 +2,7 @@
 using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Repositories;
 using AutoDealerPro.Shared.Abstractions.Modules;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,5 +19,10 @@ public class InventoryModule : IModule
                 b => b.MigrationsHistoryTable("__EFMigrationsHistory", "inventory")));
 
         services.AddScoped<IVehicleRepository, VehicleRepository>();
+    }
+
+    public void MapEndpoints(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapInventoryEndpoints();
     }
 }
