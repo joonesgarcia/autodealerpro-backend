@@ -1,4 +1,5 @@
-﻿using AutoDealerPro.Modules.Inventory.Core.Entities;
+﻿using AutoDealerPro.Modules.Inventory.Core.DTOs;
+using AutoDealerPro.Modules.Inventory.Core.Entities;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ public class VehicleRepository(InventoryDbContext context) : IVehicleRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Vehicle>> SearchAsync(VehicleSearchFilter filter)
+    public async Task<IEnumerable<Vehicle>> SearchAsync(VehicleSearchFilterDto filter)
     {
         var query = _context.Vehicles.Where(v => v.Status == VehicleStatus.Available);
 

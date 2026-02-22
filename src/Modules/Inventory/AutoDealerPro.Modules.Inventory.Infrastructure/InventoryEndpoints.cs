@@ -138,7 +138,7 @@ public static class InventoryEndpoints
         string? bodyType = null,
         string? fuelType = null)
     {
-        var filter = new VehicleSearchFilter
+        var filter = new VehicleSearchFilterDto
         {
             Make = make,
             Model = model,
