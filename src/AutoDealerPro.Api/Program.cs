@@ -1,4 +1,5 @@
 using AutoDealerPro.Modules.Inventory.Infrastructure;
+using AutoDealerPro.Modules.Leads.Infrastructure;
 using AutoDealerPro.Shared.Abstractions.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,8 @@ builder.Services.AddSwaggerGen();
 // Register all modules
 var modules = new List<IModule>
 {
-    new InventoryModule()
+    new InventoryModule(),
+    new LeadsModule()
 };
 
 foreach (var module in modules)
