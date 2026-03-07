@@ -18,72 +18,94 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
             // PUBLIC ENDPOINTS
 
             group.MapPost("", CreateLead)
+                .AllowAnonymous()
                 .WithName("CreateLead")
                 .WithSummary("Submit a new lead (customer)")
                 .Produces<LeadDetailDto>(201)
                 .Produces(400);
 
             group.MapGet("{id:guid}", GetLeadById)
+                .AllowAnonymous()
                 .WithName("GetLeadById")
                 .WithSummary("Get lead details")
                 .Produces<LeadDetailDto>()
                 .Produces(404);
 
-            // STAFF ENDPOINTS (will add [Authorize] later)
+            // STAFF ENDPOINTS
 
             group.MapGet("", GetAllLeads)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetAllLeads")
                 .WithSummary("Get all leads (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapGet("status/{status}", GetLeadsByStatus)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByStatus")
                 .WithSummary("Get leads by status (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapGet("type/{type}", GetLeadsByType)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByType")
                 .WithSummary("Get leads by type (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapGet("staff/{staffId:guid}", GetLeadsAssignedToStaff)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsAssignedToStaff")
                 .WithSummary("Get leads assigned to staff member (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapGet("vehicle/{vehicleId:guid}", GetLeadsByVehicle)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByVehicle")
                 .WithSummary("Get all leads for a vehicle (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapGet("pending-followups", GetPendingFollowUps)
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetPendingFollowUps")
                 .WithSummary("Get leads with pending follow-ups (staff only)")
-                .Produces<IEnumerable<LeadListDto>>();
+                .Produces<IEnumerable<LeadListDto>>()
+                .Produces(401);
 
             group.MapPut("{id:guid}/assign", AssignToStaff)
+                .RequireAuthorization("StaffOnly")
                 .WithName("AssignLeadToStaff")
                 .WithSummary("Assign lead to staff member (staff only)")
                 .Produces(204)
-                .Produces(404);
+                .Produces(404)
+                .Produces(401);
 
             group.MapPut("{id:guid}/contact", MarkAsContacted)
+                .RequireAuthorization("StaffOnly")
                 .WithName("MarkLeadAsContacted")
                 .WithSummary("Mark lead as contacted with notes (staff only)")
                 .Produces(204)
-                .Produces(404);
+                .Produces(404)
+                .Produces(401);
 
             group.MapPost("{id:guid}/followup", AddFollowUp)
+                .RequireAuthorization("StaffOnly")
                 .WithName("AddFollowUp")
                 .WithSummary("Add follow-up to lead (staff only)")
                 .Produces(204)
-                .Produces(404);
+                .Produces(404)
+                .Produces(401);
 
             group.MapPut("{id:guid}/close", CloseLead)
+                .RequireAuthorization("StaffOnly")
                 .WithName("CloseLead")
                 .WithSummary("Close lead as converted or lost (staff only)")
                 .Produces(204)
-                .Produces(404);
+                .Produces(404)
+                .Produces(401);
         }
 
         // PUBLIC ENDPOINT HANDLERS

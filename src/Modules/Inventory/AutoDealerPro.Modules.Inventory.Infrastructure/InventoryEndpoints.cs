@@ -17,52 +17,65 @@ public static class InventoryEndpoints
         // PUBLIC ENDPOINTS
 
         group.MapGet("", GetAvailableVehicles)
+            .AllowAnonymous()
             .WithName("GetAvailableVehicles")
             .WithSummary("Browse available vehicles")
             .Produces<IEnumerable<VehicleListDto>>();
 
         group.MapGet("{id:guid}", GetVehicleById)
+            .AllowAnonymous()
             .WithName("GetVehicleById")
             .WithSummary("Get vehicle details")
             .Produces<VehicleDetailDto>()
             .Produces(404);
 
         group.MapGet("search", SearchVehicles)
+            .AllowAnonymous()
             .WithName("SearchVehicles")
             .WithSummary("Search and filter vehicles")
             .Produces<IEnumerable<VehicleListDto>>();
 
-        // STAFF ENDPOINTS (will add [Authorize] later)
+        // STAFF ENDPOINTS
 
         group.MapPost("", CreateVehicle)
+            .RequireAuthorization("StaffOnly")
             .WithName("CreateVehicle")
             .WithSummary("Add new vehicle (staff only)")
             .Produces<VehicleStaffDto>(201)
-            .Produces(400);
+            .Produces(400)
+            .Produces(401);
 
         group.MapPut("{id:guid}/price", UpdatePrice)
+            .RequireAuthorization("StaffOnly")
             .WithName("UpdateVehiclePrice")
             .WithSummary("Update asking price (staff only)")
             .Produces(204)
-            .Produces(404);
+            .Produces(404)
+            .Produces(401);
 
         group.MapPut("{id:guid}/mileage", UpdateMileage)
+            .RequireAuthorization("StaffOnly")
             .WithName("UpdateVehicleMileage")
             .WithSummary("Update mileage (staff only)")
             .Produces(204)
-            .Produces(404);
+            .Produces(404)
+            .Produces(401);
 
         group.MapPost("{id:guid}/photos", AddPhoto)
+            .RequireAuthorization("StaffOnly")
             .WithName("AddVehiclePhoto")
             .WithSummary("Add photo URL (staff only)")
             .Produces(204)
-            .Produces(404);
+            .Produces(404)
+            .Produces(401);
 
         group.MapPost("{id:guid}/mark-sold", MarkAsSold)
+            .RequireAuthorization("StaffOnly")
             .WithName("MarkVehicleAsSold")
             .WithSummary("Mark vehicle as sold (staff only)")
             .Produces(204)
-            .Produces(404);
+            .Produces(404)
+            .Produces(401);
     }
 
     // PUBLIC ENDPOINT HANDLERS
