@@ -101,7 +101,7 @@ public class LeadsServiceTests
     {
         // Arrange
         var leadId = Guid.NewGuid();
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
 
         _mockRepository.Setup(r => r.GetByIdAsync(leadId))
@@ -136,9 +136,9 @@ public class LeadsServiceTests
         // Arrange
         var leads = new List<Lead>
         {
-            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
                 Guid.NewGuid(), LeadType.GeneralInquiry, "Message"),
-            Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432", 
+            Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432",
                 Guid.NewGuid(), LeadType.TestDrive, "Message")
         };
 
@@ -160,7 +160,7 @@ public class LeadsServiceTests
         // Arrange
         var leads = new List<Lead>
         {
-            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
                 Guid.NewGuid(), LeadType.GeneralInquiry, "Message")
         };
 
@@ -189,7 +189,7 @@ public class LeadsServiceTests
         // Arrange
         var leads = new List<Lead>
         {
-            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+            Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
                 Guid.NewGuid(), LeadType.TradeIn, "Message")
         };
 
@@ -233,7 +233,7 @@ public class LeadsServiceTests
         // Arrange
         var leadId = Guid.NewGuid();
         var staffId = Guid.NewGuid();
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var request = new AssignLeadRequest(staffId);
 
@@ -271,7 +271,7 @@ public class LeadsServiceTests
         // Arrange
         var leadId = Guid.NewGuid();
         var notes = "Customer interested in financing";
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var request = new MarkAsContactedRequest(notes);
 
@@ -309,7 +309,7 @@ public class LeadsServiceTests
     {
         // Arrange
         var leadId = Guid.NewGuid();
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var request = new CloseLeadRequest(true);
 
@@ -330,7 +330,7 @@ public class LeadsServiceTests
     {
         // Arrange
         var leadId = Guid.NewGuid();
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var request = new CloseLeadRequest(false);
 

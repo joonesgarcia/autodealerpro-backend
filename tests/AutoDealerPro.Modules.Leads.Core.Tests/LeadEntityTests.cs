@@ -62,7 +62,7 @@ public class LeadEntityTests
     public void AssignToStaff_WithValidStaffId_UpdatesStatusAndStaffId()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var staffId = Guid.NewGuid();
 
@@ -79,7 +79,7 @@ public class LeadEntityTests
     public void MarkAsContacted_WithNotes_UpdatesStatusAndNotes()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var notes = "Customer interested in financing options";
 
@@ -97,7 +97,7 @@ public class LeadEntityTests
     public void AddFollowUp_WithNotes_AddsFollowUpToCollection()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         var notes = "Follow up in 3 days";
         var nextFollowUpDate = DateTime.UtcNow.AddDays(3);
@@ -116,7 +116,7 @@ public class LeadEntityTests
     public void MarkAsClosed_WithConvertedTrue_SetStatusToConverted()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
 
         // Act
@@ -131,7 +131,7 @@ public class LeadEntityTests
     public void MarkAsClosed_WithConvertedFalse_SetStatusToLost()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
 
         // Act

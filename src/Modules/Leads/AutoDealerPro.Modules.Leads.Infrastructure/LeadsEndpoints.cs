@@ -1,9 +1,6 @@
-﻿using AutoDealerPro.Modules.Leads.Core.DTOs;
-using AutoDealerPro.Modules.Leads.Application.DTOs;
-using AutoDealerPro.Modules.Leads.Application.Exceptions;
+﻿using AutoDealerPro.Modules.Leads.Application.Exceptions;
 using AutoDealerPro.Modules.Leads.Application.Interfaces;
 using AutoDealerPro.Modules.Leads.Application.Requests;
-using AutoDealerPro.Modules.Leads.Application.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

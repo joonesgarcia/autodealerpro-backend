@@ -27,7 +27,7 @@ public class LeadRepositoryTests : IDisposable
     public async Task AddAsync_WithValidLead_InsertsAndReturnsLead()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
 
         // Act
@@ -43,7 +43,7 @@ public class LeadRepositoryTests : IDisposable
     public async Task GetByIdAsync_WithExistingLead_ReturnsLead()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         await _repository.AddAsync(lead);
 
@@ -74,7 +74,7 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var email = "john@example.com";
-        var lead = Lead.Create("John", "Doe", email, "(555) 123-4567", 
+        var lead = Lead.Create("John", "Doe", email, "(555) 123-4567",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         await _repository.AddAsync(lead);
 
@@ -102,7 +102,7 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var email = "john@example.com";
-        var lead = Lead.Create("John", "Doe", email.ToUpper(), "(555) 123-4567", 
+        var lead = Lead.Create("John", "Doe", email.ToUpper(), "(555) 123-4567",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         await _repository.AddAsync(lead);
 
@@ -118,7 +118,7 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var leads = Enumerable.Range(0, 15)
-            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com", 
+            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com",
                 "(12) 98183-7450", Guid.NewGuid(), LeadType.GeneralInquiry, "Message"))
             .ToList();
 
@@ -137,7 +137,7 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var leads = Enumerable.Range(0, 15)
-            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com", 
+            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com",
                 "(12) 98183-7450", Guid.NewGuid(), LeadType.GeneralInquiry, "Message"))
             .ToList();
 
@@ -157,9 +157,9 @@ public class LeadRepositoryTests : IDisposable
     public async Task GetByStatusAsync_WithExistingStatus_ReturnsFilteredLeads()
     {
         // Arrange
-        var newLead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var newLead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
-        var assignedLead = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432", 
+        var assignedLead = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432",
             Guid.NewGuid(), LeadType.TestDrive, "Message");
         assignedLead.AssignToStaff(Guid.NewGuid());
 
@@ -178,7 +178,7 @@ public class LeadRepositoryTests : IDisposable
     public async Task UpdateAsync_WithExistingLead_UpdatesLead()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         await _repository.AddAsync(lead);
 
@@ -199,7 +199,7 @@ public class LeadRepositoryTests : IDisposable
     public async Task DeleteAsync_WithExistingLead_RemovesLead()
     {
         // Arrange
-        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         await _repository.AddAsync(lead);
 
@@ -216,10 +216,10 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var staffId = Guid.NewGuid();
-        var lead1 = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead1 = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             Guid.NewGuid(), LeadType.GeneralInquiry, "Message");
         lead1.AssignToStaff(staffId);
-        var lead2 = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432", 
+        var lead2 = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432",
             Guid.NewGuid(), LeadType.TestDrive, "Message");
         lead2.AssignToStaff(staffId);
 
@@ -238,9 +238,9 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var vehicleId = Guid.NewGuid();
-        var lead1 = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450", 
+        var lead1 = Lead.Create("John", "Doe", "john@example.com", "(12) 98183-7450",
             vehicleId, LeadType.GeneralInquiry, "Message");
-        var lead2 = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432", 
+        var lead2 = Lead.Create("Jane", "Smith", "jane@example.com", "(11) 99876-5432",
             vehicleId, LeadType.TestDrive, "Message");
 
         await _repository.AddAsync(lead1);
@@ -258,7 +258,7 @@ public class LeadRepositoryTests : IDisposable
     {
         // Arrange
         var leads = Enumerable.Range(0, 5)
-            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com", 
+            .Select(i => Lead.Create($"First{i}", $"Last{i}", $"email{i}@example.com",
                 "(12) 98183-7450", Guid.NewGuid(), LeadType.GeneralInquiry, "Message"))
             .ToList();
 

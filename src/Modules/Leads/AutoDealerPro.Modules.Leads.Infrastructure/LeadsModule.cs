@@ -1,5 +1,4 @@
-﻿using AutoDealerPro.Modules.Leads.Core.Repositories;
-using AutoDealerPro.Modules.Leads.Application.Interfaces;
+﻿using AutoDealerPro.Modules.Leads.Application.Interfaces;
 using AutoDealerPro.Modules.Leads.Application.Requests;
 using AutoDealerPro.Modules.Leads.Application.Services;
 using AutoDealerPro.Modules.Leads.Application.Validators;

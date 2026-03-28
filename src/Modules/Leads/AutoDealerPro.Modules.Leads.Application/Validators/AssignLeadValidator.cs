@@ -1,5 +1,5 @@
-using FluentValidation;
 using AutoDealerPro.Modules.Leads.Application.Requests;
+using FluentValidation;
 
 namespace AutoDealerPro.Modules.Leads.Application.Validators;
 
