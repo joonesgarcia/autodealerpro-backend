@@ -8,23 +8,27 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Swagger
+#region ::: Swagger :::
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register all modules
+#endregion
+
+#region ::: Modules :::
+
 var modules = new List<IModule>
 {
     new InventoryModule(),
     new LeadsModule()
 };
 
-foreach (var module in modules)
-{
-    module.Register(builder.Services);
-}
+modules.ForEach(module => module.Register(builder.Services));
 
-// Add Authentication
+#endregion
+
+#region ::: Authentication :::
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Bearer", options =>
     {
@@ -40,7 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Add Authorization with policies
+#region ::: Policies :::
+
 var requireAuthPolicy = new AuthorizationPolicyBuilder()
     .RequireAuthenticatedUser()
     .Build();
@@ -50,9 +55,12 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireRole("Staff", "Admin"))
     .SetFallbackPolicy(requireAuthPolicy);
 
+#endregion
+
+#endregion
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -64,10 +72,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-foreach (var module in modules)
-{
-    module.MapEndpoints(app);
-}
+app.MapEndpoints(modules);
 
 app.Run();
 
