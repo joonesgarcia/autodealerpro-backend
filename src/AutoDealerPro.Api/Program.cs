@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["ApiSettings:Issuer"],
             ValidAudience = builder.Configuration["ApiSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"] ?? ""))
         };
     });
 
@@ -75,5 +75,7 @@ app.UseAuthorization();
 app.MapEndpoints(modules);
 
 app.Run();
+
+public partial class Program { }
 
 
