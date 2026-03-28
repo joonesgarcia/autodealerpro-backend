@@ -1,7 +1,10 @@
 ﻿using AutoDealerPro.Modules.Leads.Core.DTOs;
-using AutoDealerPro.Modules.Leads.Core.Entities;
-using AutoDealerPro.Modules.Leads.Core.Enums;
-using AutoDealerPro.Modules.Leads.Core.Repositories;
+using AutoDealerPro.Modules.Leads.Application.DTOs;
+using AutoDealerPro.Modules.Leads.Application.Exceptions;
+using AutoDealerPro.Modules.Leads.Application.Interfaces;
+using AutoDealerPro.Modules.Leads.Application.Requests;
+using AutoDealerPro.Modules.Leads.Application.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,14 +24,14 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
                 .AllowAnonymous()
                 .WithName("CreateLead")
                 .WithSummary("Submit a new lead (customer)")
-                .Produces<LeadDetailDto>(201)
+                .Produces<Application.DTOs.LeadDetailDto>(201)
                 .Produces(400);
 
             group.MapGet("{id:guid}", GetLeadById)
                 .AllowAnonymous()
                 .WithName("GetLeadById")
                 .WithSummary("Get lead details")
-                .Produces<LeadDetailDto>()
+                .Produces<Application.DTOs.LeadDetailDto>()
                 .Produces(404);
 
             // STAFF ENDPOINTS
@@ -37,42 +40,42 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetAllLeads")
                 .WithSummary("Get all leads (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapGet("status/{status}", GetLeadsByStatus)
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByStatus")
                 .WithSummary("Get leads by status (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapGet("type/{type}", GetLeadsByType)
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByType")
                 .WithSummary("Get leads by type (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapGet("staff/{staffId:guid}", GetLeadsAssignedToStaff)
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsAssignedToStaff")
                 .WithSummary("Get leads assigned to staff member (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapGet("vehicle/{vehicleId:guid}", GetLeadsByVehicle)
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByVehicle")
                 .WithSummary("Get all leads for a vehicle (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapGet("pending-followups", GetPendingFollowUps)
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetPendingFollowUps")
                 .WithSummary("Get leads with pending follow-ups (staff only)")
-                .Produces<IEnumerable<LeadListDto>>()
+                .Produces<IEnumerable<Application.DTOs.LeadListDto>>()
                 .Produces(401);
 
             group.MapPut("{id:guid}/assign", AssignToStaff)
@@ -111,32 +114,22 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
         // PUBLIC ENDPOINT HANDLERS
 
         private static async Task<IResult> CreateLead(
-            CreateLeadDto dto,
-            ILeadRepository repository)
+            CreateLeadRequest request,
+            ILeadsService service,
+            IValidator<CreateLeadRequest> validator)
         {
             try
             {
-                if (!Enum.TryParse<LeadType>(dto.Type, true, out var leadType))
-                    return Results.BadRequest(new { error = "Invalid lead type" });
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
 
-                var lead = Lead.Create(
-                    dto.FirstName,
-                    dto.LastName,
-                    dto.Email,
-                    dto.Phone,
-                    dto.VehicleId,
-                    leadType,
-                    dto.Message,
-                    dto.TradeInMake,
-                    dto.TradeInModel,
-                    dto.TradeInYear,
-                    dto.TradeInMileage
-                );
-
-                await repository.AddAsync(lead);
-
-                var responseDto = MapLeadToDetailDto(lead);
-                return Results.Created($"/api/leads/{lead.Id}", responseDto);
+                var result = await service.CreateLeadAsync(request);
+                return Results.Created($"/api/leads/{result.Id}", result);
+            }
+            catch (DuplicateLeadException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
             }
             catch (ArgumentException ex)
             {
@@ -146,194 +139,168 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
         private static async Task<IResult> GetLeadById(
             Guid id,
-            ILeadRepository repository)
+            ILeadsService service)
         {
-            var lead = await repository.GetByIdAsync(id);
-            if (lead == null)
+            try
+            {
+                var result = await service.GetLeadByIdAsync(id);
+                return Results.Ok(result);
+            }
+            catch (LeadNotFoundException)
+            {
                 return Results.NotFound();
-
-            return Results.Ok(MapLeadToDetailDto(lead));
+            }
         }
 
         // STAFF ENDPOINT HANDLERS
 
         private static async Task<IResult> GetAllLeads(
-            ILeadRepository repository,
+            ILeadsService service,
             int page = 1,
             int pageSize = 10)
         {
-            var leads = await repository.GetAllAsync(page, pageSize);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            var leads = await service.GetAllLeadsAsync(page, pageSize);
+            return Results.Ok(leads);
         }
 
         private static async Task<IResult> GetLeadsByStatus(
             string status,
-            ILeadRepository repository,
+            ILeadsService service,
             int page = 1,
             int pageSize = 10)
         {
-            if (!Enum.TryParse<LeadStatus>(status, true, out var leadStatus))
-                return Results.BadRequest(new { error = "Invalid lead status" });
-
-            var leads = await repository.GetByStatusAsync(leadStatus, page, pageSize);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            try
+            {
+                var leads = await service.GetLeadsByStatusAsync(status, page, pageSize);
+                return Results.Ok(leads);
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         }
 
         private static async Task<IResult> GetLeadsByType(
             string type,
-            ILeadRepository repository,
+            ILeadsService service,
             int page = 1,
             int pageSize = 10)
         {
-            if (!Enum.TryParse<LeadType>(type, true, out var leadType))
-                return Results.BadRequest(new { error = "Invalid lead type" });
-
-            var leads = await repository.GetByTypeAsync(leadType, page, pageSize);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            try
+            {
+                var leads = await service.GetLeadsByTypeAsync(type, page, pageSize);
+                return Results.Ok(leads);
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
         }
 
         private static async Task<IResult> GetLeadsAssignedToStaff(
             Guid staffId,
-            ILeadRepository repository,
+            ILeadsService service,
             int page = 1,
             int pageSize = 10)
         {
-            var leads = await repository.GetAssignedToStaffAsync(staffId, page, pageSize);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            var leads = await service.GetLeadsAssignedToStaffAsync(staffId, page, pageSize);
+            return Results.Ok(leads);
         }
 
         private static async Task<IResult> GetLeadsByVehicle(
             Guid vehicleId,
-            ILeadRepository repository)
+            ILeadsService service)
         {
-            var leads = await repository.GetByVehicleIdAsync(vehicleId);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            var leads = await service.GetLeadsByVehicleIdAsync(vehicleId);
+            return Results.Ok(leads);
         }
 
         private static async Task<IResult> GetPendingFollowUps(
-            ILeadRepository repository,
+            ILeadsService service,
             int page = 1,
             int pageSize = 10)
         {
-            var leads = await repository.GetPendingFollowUpsAsync(page, pageSize);
-            var dtos = leads.Select(l => MapLeadToListDto(l));
-            return Results.Ok(dtos);
+            var leads = await service.GetPendingFollowUpsAsync(page, pageSize);
+            return Results.Ok(leads);
         }
 
         private static async Task<IResult> AssignToStaff(
             Guid id,
-            Guid staffId,
-            ILeadRepository repository)
+            AssignLeadRequest request,
+            ILeadsService service,
+            IValidator<AssignLeadRequest> validator)
         {
-            var lead = await repository.GetByIdAsync(id);
-            if (lead == null)
+            try
+            {
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
+
+                await service.AssignLeadToStaffAsync(id, request);
+                return Results.NoContent();
+            }
+            catch (LeadNotFoundException)
+            {
                 return Results.NotFound();
-
-            lead.AssignToStaff(staffId);
-            await repository.UpdateAsync(lead);
-
-            return Results.NoContent();
+            }
         }
 
         private static async Task<IResult> MarkAsContacted(
             Guid id,
-            string notes,
-            ILeadRepository repository)
+            MarkAsContactedRequest request,
+            ILeadsService service,
+            IValidator<MarkAsContactedRequest> validator)
         {
-            var lead = await repository.GetByIdAsync(id);
-            if (lead == null)
+            try
+            {
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
+
+                await service.MarkLeadAsContactedAsync(id, request);
+                return Results.NoContent();
+            }
+            catch (LeadNotFoundException)
+            {
                 return Results.NotFound();
-
-            lead.MarkAsContacted(notes);
-            await repository.UpdateAsync(lead);
-
-            return Results.NoContent();
+            }
         }
 
         private static async Task<IResult> AddFollowUp(
             Guid id,
-            string notes,
-            DateTime? nextFollowUpDate,
-            ILeadRepository repository)
+            AddFollowUpRequest request,
+            ILeadsService service,
+            IValidator<AddFollowUpRequest> validator)
         {
-            var lead = await repository.GetByIdAsync(id);
-            if (lead == null)
+            try
+            {
+                var validationResult = await validator.ValidateAsync(request);
+                if (!validationResult.IsValid)
+                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
+
+                await service.AddFollowUpAsync(id, request);
+                return Results.NoContent();
+            }
+            catch (LeadNotFoundException)
+            {
                 return Results.NotFound();
-
-            lead.AddFollowUp(notes, nextFollowUpDate);
-            await repository.UpdateAsync(lead);
-
-            return Results.NoContent();
+            }
         }
 
         private static async Task<IResult> CloseLead(
             Guid id,
-            bool converted,
-            ILeadRepository repository)
+            CloseLeadRequest request,
+            ILeadsService service)
         {
-            var lead = await repository.GetByIdAsync(id);
-            if (lead == null)
+            try
+            {
+                await service.CloseLeadAsync(id, request);
+                return Results.NoContent();
+            }
+            catch (LeadNotFoundException)
+            {
                 return Results.NotFound();
-
-            lead.MarkAsClosed(converted);
-            await repository.UpdateAsync(lead);
-
-            return Results.NoContent();
-        }
-
-        // HELPER METHODS
-
-        private static LeadListDto MapLeadToListDto(Lead lead)
-        {
-            return new LeadListDto(
-                lead.Id,
-                lead.FirstName,
-                lead.LastName,
-                lead.Email,
-                lead.Phone,
-                lead.Type.ToString(),
-                lead.Status.ToString(),
-                lead.Message,
-                lead.AssignedToStaffId,
-                lead.CreatedAt
-            );
-        }
-
-        private static LeadDetailDto MapLeadToDetailDto(Lead lead)
-        {
-            var followUpDtos = lead.FollowUps.Select(f => new FollowUpDto(
-                f.Id,
-                f.Notes,
-                f.CreatedAt,
-                f.NextFollowUpDate
-            )).ToList();
-
-            return new LeadDetailDto(
-                lead.Id,
-                lead.FirstName,
-                lead.LastName,
-                lead.Email,
-                lead.Phone,
-                lead.VehicleId,
-                lead.Type.ToString(),
-                lead.Status.ToString(),
-                lead.Message,
-                lead.TradeInMake,
-                lead.TradeInModel,
-                lead.TradeInYear,
-                lead.TradeInMileage,
-                lead.AssignedToStaffId,
-                lead.ContactedAt,
-                lead.StaffNotes,
-                followUpDtos,
-                lead.CreatedAt,
-                lead.UpdatedAt
-            );
+            }
         }
     }
 }
