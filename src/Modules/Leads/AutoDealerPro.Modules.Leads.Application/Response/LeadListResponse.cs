@@ -1,6 +1,6 @@
-namespace AutoDealerPro.Modules.Leads.Application.DTOs;
+namespace AutoDealerPro.Modules.Leads.Application.Response;
 
-public record LeadListDto(
+public record LeadListResponse(
     Guid Id,
     string FirstName,
     string LastName,

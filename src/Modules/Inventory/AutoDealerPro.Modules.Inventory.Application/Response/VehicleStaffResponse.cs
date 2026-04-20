@@ -1,6 +1,6 @@
-﻿namespace AutoDealerPro.Modules.Inventory.Core.DTOs;
-// For detailed view (customers + staff)
-public record VehicleDetailDto(
+namespace AutoDealerPro.Modules.Inventory.Application.Response;
+
+public record VehicleStaffResponse(
     Guid Id,
     string Make,
     string Model,
@@ -13,9 +13,13 @@ public record VehicleDetailDto(
     string Transmission,
     string FuelType,
     string BodyType,
+    decimal PurchasePrice,
     decimal AskingPrice,
+    decimal? SellingPrice,
     string Status,
+    string? Notes,
     List<string> PhotoUrls,
     int ViewCount,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    DateTime? SoldAt
 );

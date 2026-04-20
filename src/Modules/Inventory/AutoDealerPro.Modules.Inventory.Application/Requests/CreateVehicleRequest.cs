@@ -1,7 +1,6 @@
-﻿namespace AutoDealerPro.Modules.Inventory.Core.DTOs;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests;
 
-// For creating a new vehicle (staff only)
-public record CreateVehicleDto(
+public record CreateVehicleRequest(
     string Make,
     string Model,
     int Year,

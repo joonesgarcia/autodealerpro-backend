@@ -1,6 +1,6 @@
-﻿namespace AutoDealerPro.Modules.Inventory.Core.DTOs;
-// For public display (customers)
-public record VehicleListDto(
+namespace AutoDealerPro.Modules.Inventory.Application.Response;
+
+public record VehicleListResponse(
     Guid Id,
     string Make,
     string Model,

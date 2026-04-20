@@ -1,6 +1,6 @@
-namespace AutoDealerPro.Modules.Leads.Application.DTOs;
+namespace AutoDealerPro.Modules.Leads.Application.Response;
 
-public record LeadDetailDto(
+public record LeadDetailResponse(
     Guid Id,
     string FirstName,
     string LastName,
@@ -17,7 +17,7 @@ public record LeadDetailDto(
     Guid? AssignedToStaffId,
     DateTime? ContactedAt,
     string? StaffNotes,
-    IList<FollowUpDto> FollowUps,
+    IList<FollowUpResponse> FollowUps,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );

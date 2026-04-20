@@ -1,7 +1,5 @@
 namespace AutoDealerPro.Modules.Leads.Application.Exceptions;
 
-public class LeadNotFoundException : Exception
-{
-    public LeadNotFoundException(Guid leadId)
-        : base($"Lead with ID '{leadId}' was not found") { }
-}
+public class LeadNotFoundException(Guid leadId)
+    : Exception($"Lead with ID '{leadId}' was not found")
+{ }

@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <ProjectReference Include="..\AutoDealerPro.Modules.Inventory.Core\AutoDealerPro.Modules.Inventory.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
-﻿namespace AutoDealerPro.Modules.Inventory.Core.DTOs;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests;
 
-public class VehicleSearchFilterDto
+public class VehicleSearchFilterRequest
 {
     public string? Make { get; set; }
     public string? Model { get; set; }

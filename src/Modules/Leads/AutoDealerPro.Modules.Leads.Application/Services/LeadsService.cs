@@ -1,7 +1,7 @@
-using AutoDealerPro.Modules.Leads.Application.DTOs;
 using AutoDealerPro.Modules.Leads.Application.Exceptions;
 using AutoDealerPro.Modules.Leads.Application.Interfaces;
 using AutoDealerPro.Modules.Leads.Application.Requests;
+using AutoDealerPro.Modules.Leads.Application.Response;
 using AutoDealerPro.Modules.Leads.Core.Entities;
 using AutoDealerPro.Modules.Leads.Core.Enums;
 using AutoDealerPro.Modules.Leads.Core.Repositories;
@@ -12,18 +12,15 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 {
     private readonly ILeadRepository _repository = repository;
 
-    public async Task<LeadDetailDto> CreateLeadAsync(CreateLeadRequest request)
+    public async Task<LeadDetailResponse> CreateLeadAsync(CreateLeadRequest request)
     {
-        // Check for duplicate email
         var existingLead = await _repository.GetByEmailAsync(request.Email);
         if (existingLead != null)
             throw new DuplicateLeadException(request.Email);
 
-        // Validate lead type
         if (!Enum.TryParse<LeadType>(request.Type, true, out var leadType))
             throw new ArgumentException($"Invalid lead type: {request.Type}");
 
-        // Create lead
         var lead = Lead.Create(
             request.FirstName,
             request.LastName,
@@ -39,58 +36,58 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         );
 
         await _repository.AddAsync(lead);
-        return MapToDetailDto(lead);
+        return MapToDetailResponse(lead);
     }
 
-    public async Task<LeadDetailDto> GetLeadByIdAsync(Guid id)
+    public async Task<LeadDetailResponse> GetLeadByIdAsync(Guid id)
     {
         var lead = await _repository.GetByIdAsync(id);
         if (lead == null)
             throw new LeadNotFoundException(id);
 
-        return MapToDetailDto(lead);
+        return MapToDetailResponse(lead);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetAllLeadsAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponse>> GetAllLeadsAsync(int page = 1, int pageSize = 10)
     {
         var leads = await _repository.GetAllAsync(page, pageSize);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetLeadsByStatusAsync(string status, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponse>> GetLeadsByStatusAsync(string status, int page = 1, int pageSize = 10)
     {
         if (!Enum.TryParse<LeadStatus>(status, true, out var leadStatus))
             throw new ArgumentException($"Invalid lead status: {status}");
 
         var leads = await _repository.GetByStatusAsync(leadStatus, page, pageSize);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetLeadsByTypeAsync(string type, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponse>> GetLeadsByTypeAsync(string type, int page = 1, int pageSize = 10)
     {
         if (!Enum.TryParse<LeadType>(type, true, out var leadType))
             throw new ArgumentException($"Invalid lead type: {type}");
 
         var leads = await _repository.GetByTypeAsync(leadType, page, pageSize);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetLeadsAssignedToStaffAsync(Guid staffId, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponse>> GetLeadsAssignedToStaffAsync(Guid staffId, int page = 1, int pageSize = 10)
     {
         var leads = await _repository.GetAssignedToStaffAsync(staffId, page, pageSize);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetLeadsByVehicleIdAsync(Guid vehicleId)
+    public async Task<IEnumerable<LeadListResponse>> GetLeadsByVehicleIdAsync(Guid vehicleId)
     {
         var leads = await _repository.GetByVehicleIdAsync(vehicleId);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListDto>> GetPendingFollowUpsAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponse>> GetPendingFollowUpsAsync(int page = 1, int pageSize = 10)
     {
         var leads = await _repository.GetPendingFollowUpsAsync(page, pageSize);
-        return leads.Select(MapToListDto);
+        return leads.Select(MapToListResponse);
     }
 
     public async Task AssignLeadToStaffAsync(Guid leadId, AssignLeadRequest request)
@@ -134,16 +131,16 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
     }
 
     // Helper methods
-    private static LeadDetailDto MapToDetailDto(Lead lead)
+    private static LeadDetailResponse MapToDetailResponse(Lead lead)
     {
-        var followUpDtos = lead.FollowUps.Select(f => new FollowUpDto(
+        var followUpResponses = lead.FollowUps.Select(f => new FollowUpResponse(
             f.Id,
             f.Notes,
             f.CreatedAt,
             f.NextFollowUpDate
         )).ToList();
 
-        return new LeadDetailDto(
+        return new LeadDetailResponse(
             lead.Id,
             lead.FirstName,
             lead.LastName,
@@ -160,15 +157,15 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
             lead.AssignedToStaffId,
             lead.ContactedAt,
             lead.StaffNotes,
-            followUpDtos,
+            followUpResponses,
             lead.CreatedAt,
             lead.UpdatedAt ?? lead.CreatedAt
         );
     }
 
-    private static LeadListDto MapToListDto(Lead lead)
+    private static LeadListResponse MapToListResponse(Lead lead)
     {
-        return new LeadListDto(
+        return new LeadListResponse(
             lead.Id,
             lead.FirstName,
             lead.LastName,
