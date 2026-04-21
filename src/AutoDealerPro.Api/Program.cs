@@ -1,3 +1,4 @@
+using AutoDealerPro.Modules.Auth.Infrastructure;
 using AutoDealerPro.Modules.Inventory.Infrastructure;
 using AutoDealerPro.Modules.Leads.Infrastructure;
 using AutoDealerPro.Shared.Abstractions.Modules;
@@ -20,7 +21,8 @@ builder.Services.AddSwaggerGen();
 var modules = new List<IModule>
 {
     new InventoryModule(),
-    new LeadsModule()
+    new LeadsModule(),
+    new AuthModule()
 };
 
 modules.ForEach(module => module.Register(builder.Services));

@@ -4,9 +4,8 @@ using AutoDealerPro.Modules.Inventory.Application.Response;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace AutoDealerPro.Modules.Inventory.Infrastructure;
 
@@ -18,7 +17,8 @@ public static class InventoryEndpoints
             .WithTags("Vehicles");
 
 
-        group.MapGet("", async ([FromServices] IInventoryService service, int page, int pageSize) => {
+        group.MapGet("", async ([FromServices] IInventoryService service, int page, int pageSize) =>
+        {
             var vehicles = await service.GetAvailableVehiclesAsync(page, pageSize);
             return Results.Ok(vehicles);
         })
@@ -27,7 +27,8 @@ public static class InventoryEndpoints
         .WithSummary("Browse available vehicles")
         .Produces<IEnumerable<VehicleListResponse>>();
 
-        group.MapGet("{id:guid}", async (Guid id, [FromServices] IInventoryService service) => {
+        group.MapGet("{id:guid}", async (Guid id, [FromServices] IInventoryService service) =>
+        {
             var vehicle = await service.GetVehicleByIdAsync(id);
             if (vehicle == null) return Results.NotFound();
             return Results.Ok(vehicle);
@@ -38,7 +39,8 @@ public static class InventoryEndpoints
         .Produces<VehicleDetailResponse>()
         .Produces(404);
 
-        group.MapGet("search", async ([FromServices] IInventoryService service, [AsParameters] VehicleSearchFilterRequest filter) => {
+        group.MapGet("search", async ([FromServices] IInventoryService service, [AsParameters] VehicleSearchFilterRequest filter) =>
+        {
             var vehicles = await service.SearchVehiclesAsync(filter);
             return Results.Ok(vehicles);
         })
@@ -47,7 +49,8 @@ public static class InventoryEndpoints
         .WithSummary("Search and filter vehicles")
         .Produces<IEnumerable<VehicleListResponse>>();
 
-        group.MapPost("", async ([FromServices] IInventoryService service, [FromServices] IValidator<CreateVehicleRequest> validator, CreateVehicleRequest request) => {
+        group.MapPost("", async ([FromServices] IInventoryService service, [FromServices] IValidator<CreateVehicleRequest> validator, CreateVehicleRequest request) =>
+        {
             var validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
@@ -61,14 +64,18 @@ public static class InventoryEndpoints
         .Produces(400)
         .Produces(401);
 
-        group.MapPut("{id:guid}/price", async (Guid id, UpdatePriceRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdatePriceRequest> validator) => {
+        group.MapPut("{id:guid}/price", async (Guid id, UpdatePriceRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdatePriceRequest> validator) =>
+        {
             var validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            try {
+            try
+            {
                 await service.UpdatePriceAsync(id, request);
                 return Results.NoContent();
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 return Results.NotFound();
             }
         })
@@ -79,14 +86,18 @@ public static class InventoryEndpoints
         .Produces(404)
         .Produces(401);
 
-        group.MapPut("{id:guid}/mileage", async (Guid id, UpdateMileageRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdateMileageRequest> validator) => {
+        group.MapPut("{id:guid}/mileage", async (Guid id, UpdateMileageRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdateMileageRequest> validator) =>
+        {
             var validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            try {
+            try
+            {
                 await service.UpdateMileageAsync(id, request);
                 return Results.NoContent();
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 return Results.NotFound();
             }
         })
@@ -97,14 +108,18 @@ public static class InventoryEndpoints
         .Produces(404)
         .Produces(401);
 
-        group.MapPost("{id:guid}/photos", async (Guid id, AddPhotoRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<AddPhotoRequest> validator) => {
+        group.MapPost("{id:guid}/photos", async (Guid id, AddPhotoRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<AddPhotoRequest> validator) =>
+        {
             var validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            try {
+            try
+            {
                 await service.AddPhotoAsync(id, request);
                 return Results.NoContent();
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 return Results.NotFound();
             }
         })
@@ -115,14 +130,18 @@ public static class InventoryEndpoints
         .Produces(404)
         .Produces(401);
 
-        group.MapPost("{id:guid}/mark-sold", async (Guid id, MarkAsSoldRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<MarkAsSoldRequest> validator) => {
+        group.MapPost("{id:guid}/mark-sold", async (Guid id, MarkAsSoldRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<MarkAsSoldRequest> validator) =>
+        {
             var validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            try {
+            try
+            {
                 await service.MarkAsSoldAsync(id, request);
                 return Results.NoContent();
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 return Results.NotFound();
             }
         })
