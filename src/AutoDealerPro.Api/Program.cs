@@ -67,24 +67,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"] ?? "")),
             ClockSkew = TimeSpan.FromMinutes(5)
         };
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = ctx =>
-            {
-                Console.WriteLine($"[Auth] Failed: {ctx.Exception.Message}");
-                return Task.CompletedTask;
-            },
-            OnTokenValidated = ctx =>
-            {
-                Console.WriteLine($"[Auth] Token valid for: {ctx.Principal?.Identity?.Name}");
-                return Task.CompletedTask;
-            },
-            OnChallenge = ctx =>
-            {
-                Console.WriteLine($"[Auth] Challenge: {ctx.Error} - {ctx.ErrorDescription}");
-                return Task.CompletedTask;
-            }
-        };
     });
 #endregion
 
