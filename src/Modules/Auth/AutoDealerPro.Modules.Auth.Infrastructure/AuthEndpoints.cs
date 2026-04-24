@@ -1,5 +1,6 @@
 using AutoDealerPro.Modules.Auth.Application.Interface;
 using AutoDealerPro.Modules.Auth.Core.Requests;
+using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -12,12 +13,26 @@ public static class AuthEndpoints
     {
         var group = endpoints.MapGroup("/api/auth").WithTags("Auth");
 
-        group.MapPost("/login", (LoginRequest req, IAuthService service) =>
+        group.MapPost("/login", async (LoginRequest req, IAuthService service) =>
         {
-            var token = service.HandleLogin(req);
-            return token is not null ? Results.Ok(new { token }) : Results.Unauthorized();
+            var loginResult = await service.HandleLogin(req);
+
+            return loginResult.Status == LoginStatus.Success ? 
+                Results.Ok(new { token = loginResult.Token }) : 
+                Results.Unauthorized();
         })
         .AllowAnonymous()
         .WithName("Login");
+
+        group.MapPost("/register", async (CreateAccountRequest req, IAuthService service) =>
+        {
+             var accountCreationResult = await service.HandleCreateAccount(req);
+
+            return accountCreationResult.Created ?
+                Results.Created() :
+                Results.BadRequest($"Error: {accountCreationResult.AccountCreationStatus}");
+        })
+        .AllowAnonymous()
+        .WithName("Register");
     }
 }
