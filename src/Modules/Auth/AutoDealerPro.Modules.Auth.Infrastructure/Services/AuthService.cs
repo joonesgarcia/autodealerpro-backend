@@ -17,11 +17,9 @@ public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTo
         
         switch (validationResult)
         {
-            case AccountCreationValidationStatus.InvalidUsername:
+            case AccountCreationValidationStatus.UsernameTaken:
                 return new CreateAccountResult(false, validationResult);
-            case AccountCreationValidationStatus.InvalidEmail:
-                return new CreateAccountResult(false, validationResult);
-            case AccountCreationValidationStatus.WeakPassword:
+            case AccountCreationValidationStatus.EmailTaken:
                 return new CreateAccountResult(false, validationResult);
         }
 

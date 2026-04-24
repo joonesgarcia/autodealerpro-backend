@@ -14,13 +14,13 @@ public class InMemoryUserRepository : IUserRepository
         new User { 
             Id = Guid.NewGuid(), 
             Username = "admin", 
-            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("strong"))), 
+            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))), 
             Roles = ["Admin", "Staff"] 
         },
         new User { 
             Id = Guid.NewGuid(), 
             Username = "staff",
-            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("another-strong-password"))),
+            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))),
             Roles = ["Staff"] 
         }
     ];
@@ -31,10 +31,10 @@ public class InMemoryUserRepository : IUserRepository
     public async Task<AccountCreationValidationStatus> ValidateAccountCreation(CreateAccountRequest createAccountRequest)
     {
         var validEmail = await IsValidEmail(createAccountRequest.Email);
-        if (!validEmail) return await Task.FromResult(AccountCreationValidationStatus.InvalidEmail);
+        if (!validEmail) return await Task.FromResult(AccountCreationValidationStatus.EmailTaken);
 
         var validUsername = await IsValidUserName(createAccountRequest.Username);
-        if (!validUsername) return await Task.FromResult(AccountCreationValidationStatus.InvalidUsername);
+        if (!validUsername) return await Task.FromResult(AccountCreationValidationStatus.UsernameTaken);
 
         return await Task.FromResult(AccountCreationValidationStatus.Valid);
     }

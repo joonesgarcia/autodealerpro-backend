@@ -2,7 +2,6 @@
 public enum AccountCreationValidationStatus
 { 
     Valid,
-    InvalidUsername,
-    InvalidEmail,
-    WeakPassword
+    UsernameTaken,
+    EmailTaken
 }
