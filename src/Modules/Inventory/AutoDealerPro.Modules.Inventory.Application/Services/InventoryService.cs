@@ -30,10 +30,10 @@ public class InventoryService(IVehicleRepository repository) : IInventoryService
 
     public async Task<IEnumerable<VehicleListResponse>> SearchVehiclesAsync(VehicleSearchFilterRequest filter)
     {
-        var query = _repository
-            .GetAvailableAsync(1, 1000) // get all available, filter in memory for now
-            .Result
-            .AsQueryable();
+        var available = await _repository
+            .GetAvailableAsync(1, 1000); // get all available
+        
+        var query = available.AsQueryable(); // filter in memory 
 
         if (!string.IsNullOrEmpty(filter.Make))
             query = query.Where(v => v.Make.ToLower() == filter.Make.ToLower());
