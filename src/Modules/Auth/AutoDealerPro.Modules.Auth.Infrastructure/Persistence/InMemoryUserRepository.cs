@@ -20,15 +20,10 @@ public class InMemoryUserRepository : IUserRepository
         }
     ];
 
-    public InMemoryUserRepository(IServiceScopeFactory scopeFactory)
+    public InMemoryUserRepository()
     {
         var mockAdmin = _users.First();
-
-        using var scope = scopeFactory.CreateScope();
-        var scopedHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
-        var passwordHash = scopedHasher.HashPassword(mockAdmin, "astrongpassword");
-
-        mockAdmin.PasswordHash = passwordHash;
+        mockAdmin.PasswordHash = new PasswordHasher<User>().HashPassword(mockAdmin, "astrongpassword");
     }
 
     public async Task<User?> GetBy(string username) =>
