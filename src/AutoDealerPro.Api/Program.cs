@@ -88,17 +88,12 @@ builder.Services.AddAuthorizationBuilder()
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
-var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-
-logger.LogInformation("Running migrations...");
 
 var inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
 inventoryDb.Database.Migrate();
-logger.LogInformation("Inventory migrations done.");
 
 var leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
 leadsDb.Database.Migrate();
-logger.LogInformation("Leads migrations done.");
 
 app.UseSwagger();
 app.UseSwaggerUI();
