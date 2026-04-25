@@ -1,12 +1,16 @@
 using AutoDealerPro.Modules.Auth.Infrastructure;
 using AutoDealerPro.Modules.Inventory.Infrastructure;
+using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Leads.Infrastructure;
+using AutoDealerPro.Modules.Leads.Infrastructure.Persistence;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +86,14 @@ builder.Services.AddAuthorizationBuilder()
 #endregion
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+
+var inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+inventoryDb.Database.Migrate();
+
+var leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
+leadsDb.Database.Migrate();
 
 app.UseSwagger();
 app.UseSwaggerUI();
