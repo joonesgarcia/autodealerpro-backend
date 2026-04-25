@@ -49,8 +49,7 @@ public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTo
 
         var hasher = new PasswordHasher<User>();
 
-        var loginPasswordHash = hasher.HashPassword(user, loginRequest.Password);
-        var verificationResult = hasher.VerifyHashedPassword(user, user.PasswordHash, loginPasswordHash);
+        var verificationResult = hasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
 
         if (verificationResult is not PasswordVerificationResult.Success)
             return new LoginResult(LoginStatus.InvalidCredentials, null);

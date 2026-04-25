@@ -2,6 +2,7 @@ using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.ResultObjects;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -13,17 +14,18 @@ public class InMemoryUserRepository : IUserRepository
     [
         new User {
             Id = Guid.NewGuid(),
-            Username = "admin",
-            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))),
+            Username = "theadministrator",
             Roles = ["Admin", "Staff"]
-        },
-        new User {
-            Id = Guid.NewGuid(),
-            Username = "staff",
-            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))),
-            Roles = ["Staff"]
         }
     ];
+
+    public InMemoryUserRepository()
+    {
+        var mockAdmin = _users.First();
+        var hasher = new PasswordHasher<User>();
+        var passwordHash = hasher.HashPassword(mockAdmin, "astrongpassword");
+        mockAdmin.PasswordHash = passwordHash;
+    }
 
     public async Task<User?> GetBy(string username) =>
         await Task.FromResult(_users.FirstOrDefault(u => u.Username == username));
