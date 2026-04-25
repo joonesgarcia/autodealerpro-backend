@@ -23,8 +23,8 @@ public static class AuthEndpoints
 
             var loginResult = await service.HandleLogin(request);
 
-            return loginResult.Status == LoginStatus.Success ? 
-                Results.Ok(new { token = loginResult.Token }) : 
+            return loginResult.Status == LoginStatus.Success ?
+                Results.Ok(new { token = loginResult.Token }) :
                 Results.Unauthorized();
         })
         .AllowAnonymous()

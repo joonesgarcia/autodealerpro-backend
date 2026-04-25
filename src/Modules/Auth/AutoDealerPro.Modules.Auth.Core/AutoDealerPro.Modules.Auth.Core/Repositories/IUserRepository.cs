@@ -7,6 +7,6 @@ namespace AutoDealerPro.Modules.Auth.Core.Repositories;
 public interface IUserRepository
 {
     Task<User?> GetBy(string username);
-    Task CreateAccount(CreateAccountRequest createAccountRequest, string passwordHash);
+    Task CreateAccount(User user);
     Task<AccountCreationValidationStatus> ValidateAccountCreation(CreateAccountRequest createAccountRequest);
 }

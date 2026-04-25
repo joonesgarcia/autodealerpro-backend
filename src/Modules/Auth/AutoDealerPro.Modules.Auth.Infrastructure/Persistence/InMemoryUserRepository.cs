@@ -11,17 +11,17 @@ public class InMemoryUserRepository : IUserRepository
 {
     private readonly List<User> _users =
     [
-        new User { 
-            Id = Guid.NewGuid(), 
-            Username = "admin", 
-            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))), 
-            Roles = ["Admin", "Staff"] 
+        new User {
+            Id = Guid.NewGuid(),
+            Username = "admin",
+            PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))),
+            Roles = ["Admin", "Staff"]
         },
-        new User { 
-            Id = Guid.NewGuid(), 
+        new User {
+            Id = Guid.NewGuid(),
             Username = "staff",
             PasswordHash = Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes("mystrongpassword"))),
-            Roles = ["Staff"] 
+            Roles = ["Staff"]
         }
     ];
 
@@ -38,20 +38,9 @@ public class InMemoryUserRepository : IUserRepository
 
         return await Task.FromResult(AccountCreationValidationStatus.Valid);
     }
-    public Task CreateAccount(CreateAccountRequest createAccountRequest, string passwordHash)
+    public Task CreateAccount(User user)
     {
-        var user = new User()
-        {
-            Id = Guid.NewGuid(),
-            Email = createAccountRequest.Email,
-            Username = createAccountRequest.Username,
-            PasswordHash = passwordHash,
-            EmailConfirmed = false,
-            Roles = ["User"]
-        };
-
         _users.Add(user);
-
         return Task.CompletedTask;
     }
 
