@@ -1,4 +1,5 @@
 using AutoDealerPro.Modules.Auth.Core.Entities;
+using AutoDealerPro.Modules.Auth.Core.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace AutoDealerPro.Modules.Auth.Infrastructure.Util;
 
-public class JwtTokenGenerator(IConfiguration config)
+public class JwtTokenGenerator(IConfiguration config) : IJwtTokenGenerator
 {
     private readonly IConfiguration _config = config;
 

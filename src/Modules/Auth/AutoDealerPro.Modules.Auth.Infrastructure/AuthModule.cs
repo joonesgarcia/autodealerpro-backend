@@ -1,6 +1,7 @@
 using AutoDealerPro.Modules.Auth.Application.Interface;
 using AutoDealerPro.Modules.Auth.Application.Services;
 using AutoDealerPro.Modules.Auth.Core.Entities;
+using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.Validators;
@@ -27,10 +28,9 @@ public class AuthModule : IModule
     public void Register(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
         services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+        services.AddScoped<IJwtTokenGenerator,JwtTokenGenerator>();
 
-        services.AddScoped<JwtTokenGenerator>();
         services.AddScoped<IAuthService, AuthService>();
 
         services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountValidator>();

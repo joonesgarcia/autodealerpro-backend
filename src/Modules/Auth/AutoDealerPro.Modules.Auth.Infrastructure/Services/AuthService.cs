@@ -1,5 +1,6 @@
 ﻿using AutoDealerPro.Modules.Auth.Application.Interface;
 using AutoDealerPro.Modules.Auth.Core.Entities;
+using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.ResultObjects;
@@ -8,10 +9,10 @@ using AutoDealerPro.Modules.Auth.Infrastructure.Util;
 using Microsoft.AspNetCore.Identity;
 namespace AutoDealerPro.Modules.Auth.Application.Services;
 
-public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTokenGenerator, IPasswordHasher<User> passwordHasher) : IAuthService
+public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher<User> passwordHasher) : IAuthService
 {
     private readonly IUserRepository _userRepository = userRepository;
-    private readonly JwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
     public async Task<CreateAccountResult> HandleCreateAccount(CreateAccountRequest createAccountRequest)
