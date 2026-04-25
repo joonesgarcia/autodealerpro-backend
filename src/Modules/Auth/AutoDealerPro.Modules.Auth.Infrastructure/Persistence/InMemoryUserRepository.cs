@@ -3,6 +3,7 @@ using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.ResultObjects;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -19,11 +20,14 @@ public class InMemoryUserRepository : IUserRepository
         }
     ];
 
-    public InMemoryUserRepository()
+    public InMemoryUserRepository(IServiceScopeFactory scopeFactory)
     {
         var mockAdmin = _users.First();
-        var hasher = new PasswordHasher<User>();
-        var passwordHash = hasher.HashPassword(mockAdmin, "astrongpassword");
+
+        using var scope = scopeFactory.CreateScope();
+        var scopedHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+        var passwordHash = scopedHasher.HashPassword(mockAdmin, "astrongpassword");
+
         mockAdmin.PasswordHash = passwordHash;
     }
 

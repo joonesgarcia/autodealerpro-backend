@@ -8,10 +8,11 @@ using AutoDealerPro.Modules.Auth.Infrastructure.Util;
 using Microsoft.AspNetCore.Identity;
 namespace AutoDealerPro.Modules.Auth.Application.Services;
 
-public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTokenGenerator) : IAuthService
+public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTokenGenerator, IPasswordHasher<User> passwordHasher) : IAuthService
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly JwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
+    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
     public async Task<CreateAccountResult> HandleCreateAccount(CreateAccountRequest createAccountRequest)
     {
@@ -34,8 +35,7 @@ public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTo
             Roles = ["User"]
         };
 
-        var hasher = new PasswordHasher<User>();
-        user.PasswordHash = hasher.HashPassword(user, createAccountRequest.Password);
+        user.PasswordHash = _passwordHasher.HashPassword(user, createAccountRequest.Password);
 
         await _userRepository.CreateAccount(user);
 
@@ -47,9 +47,7 @@ public class AuthService(IUserRepository userRepository, JwtTokenGenerator jwtTo
         var user = await _userRepository.GetBy(loginRequest.Username);
         if (user == null) return new LoginResult(LoginStatus.InvalidCredentials, null);
 
-        var hasher = new PasswordHasher<User>();
-
-        var verificationResult = hasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
+        var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
 
         if (verificationResult is not PasswordVerificationResult.Success)
             return new LoginResult(LoginStatus.InvalidCredentials, null);
