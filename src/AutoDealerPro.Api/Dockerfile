@@ -1,9 +1,21 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Runtime base
+FROM ubuntu:22.04 AS base
 WORKDIR /app
 EXPOSE 80
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    apt-get update && apt-get install -y aspnetcore-runtime-8.0 && \
+    rm -rf /var/lib/apt/lists/*
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Build stage
+FROM ubuntu:22.04 AS build
 WORKDIR /src
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    apt-get update && apt-get install -y dotnet-sdk-8.0 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy solution and project files
 COPY ["AutoDealerPro.sln", "./"]
@@ -21,12 +33,12 @@ COPY ["src/Modules/Leads/AutoDealerPro.Modules.Leads.Core/AutoDealerPro.Modules.
 COPY ["src/Modules/Leads/AutoDealerPro.Modules.Leads.Application/AutoDealerPro.Modules.Leads.Application.csproj", "src/Modules/Leads/AutoDealerPro.Modules.Leads.Application/"]
 COPY ["src/Modules/Leads/AutoDealerPro.Modules.Leads.Infrastructure/AutoDealerPro.Modules.Leads.Infrastructure.csproj", "src/Modules/Leads/AutoDealerPro.Modules.Leads.Infrastructure/"]
 
-COPY ["src/Modules/Auth/AutoDealerPro.Modules.Auth.Core/AutoDealerPro.Modules.Auth.Core/AutoDealerPro.Modules.Leads.Core.csproj", "src/Modules/Auth/AutoDealerPro.Modules.Auth.Core/"]
+COPY ["src/Modules/Auth/AutoDealerPro.Modules.Auth.Core/AutoDealerPro.Modules.Auth.Core/AutoDealerPro.Modules.Auth.Core.csproj", "src/Modules/Auth/AutoDealerPro.Modules.Auth.Core/"]
 COPY ["src/Modules/Auth/AutoDealerPro.Modules.Auth.Application/AutoDealerPro.Modules.Auth.Application.csproj", "src/Modules/Auth/AutoDealerPro.Modules.Auth.Application/"]
 COPY ["src/Modules/Auth/AutoDealerPro.Modules.Auth.Infrastructure/AutoDealerPro.Modules.Auth.Infrastructure.csproj", "src/Modules/Auth/AutoDealerPro.Modules.Auth.Infrastructure/"]
 
 # Restore dependencies
-RUN dotnet restore
+RUN dotnet restore "src/AutoDealerPro.Api/AutoDealerPro.Api.csproj"
 
 # Copy everything else and build
 COPY . .

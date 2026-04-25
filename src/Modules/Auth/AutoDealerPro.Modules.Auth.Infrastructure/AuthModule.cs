@@ -8,6 +8,7 @@ using AutoDealerPro.Modules.Auth.Infrastructure.Util;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using FluentValidation;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDealerPro.Modules.Auth.Infrastructure;
@@ -21,7 +22,7 @@ public class AuthModule : IModule
         endpoints.MapAuthEndpoints();
     }
 
-    public void Register(IServiceCollection services)
+    public void Register(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IUserRepository, InMemoryUserRepository>();
         services.AddSingleton<JwtTokenGenerator>();

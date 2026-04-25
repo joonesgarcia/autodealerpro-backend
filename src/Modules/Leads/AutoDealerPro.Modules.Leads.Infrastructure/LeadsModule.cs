@@ -9,6 +9,7 @@ using AutoDealerPro.Shared.Abstractions.Modules;
 using FluentValidation;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDealerPro.Modules.Leads.Infrastructure;
@@ -17,11 +18,11 @@ public class LeadsModule : IModule
 {
     public string Name => "Leads";
 
-    public void Register(IServiceCollection services)
+    public void Register(IServiceCollection services, IConfiguration configuration)
     {
         // Database
         services.AddDbContext<LeadsDbContext>(options =>
-            options.UseNpgsql("Host=localhost;Database=autodealerpro;Username=postgres;Password=postgres",
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsHistoryTable("__EFMigrationsHistory", "leads")));
 
         // Repositories

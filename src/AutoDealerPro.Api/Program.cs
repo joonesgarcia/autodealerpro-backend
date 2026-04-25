@@ -48,7 +48,7 @@ var modules = new List<IModule>
     new LeadsModule(),
     new AuthModule()
 };
-modules.ForEach(module => module.Register(builder.Services));
+modules.ForEach(module => module.Register(builder.Services, builder.Configuration));
 #endregion
 
 #region ::: Authentication :::
@@ -83,11 +83,8 @@ builder.Services.AddAuthorizationBuilder()
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

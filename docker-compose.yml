@@ -22,8 +22,10 @@ services:
       dockerfile: src/AutoDealerPro.Api/Dockerfile
     container_name: autodealerpro-api
     ports:
-      - "5000:80"
+      - "5000:5000"
     environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=autodealerpro;Username=postgres;Password=postgres
     depends_on:
       postgres:
