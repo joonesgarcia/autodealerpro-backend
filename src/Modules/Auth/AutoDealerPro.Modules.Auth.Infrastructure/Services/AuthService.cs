@@ -5,9 +5,8 @@ using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.ResultObjects;
 using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
-using AutoDealerPro.Modules.Auth.Infrastructure.Util;
 using Microsoft.AspNetCore.Identity;
-namespace AutoDealerPro.Modules.Auth.Application.Services;
+namespace AutoDealerPro.Modules.Auth.Infrastructure.Services;
 
 public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, IPasswordHasher<User> passwordHasher) : IAuthService
 {

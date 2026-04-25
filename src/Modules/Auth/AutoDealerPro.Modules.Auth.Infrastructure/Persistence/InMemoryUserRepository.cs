@@ -1,11 +1,8 @@
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects;
+using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace AutoDealerPro.Modules.Auth.Infrastructure.Persistence;
 

@@ -1,6 +1,6 @@
 ﻿using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects;
+using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
 
 namespace AutoDealerPro.Modules.Auth.Core.Repositories;
 

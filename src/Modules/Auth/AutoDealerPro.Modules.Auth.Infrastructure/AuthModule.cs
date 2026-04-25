@@ -1,11 +1,11 @@
 using AutoDealerPro.Modules.Auth.Application.Interface;
-using AutoDealerPro.Modules.Auth.Application.Services;
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
 using AutoDealerPro.Modules.Auth.Core.Requests;
 using AutoDealerPro.Modules.Auth.Core.Validators;
 using AutoDealerPro.Modules.Auth.Infrastructure.Persistence;
+using AutoDealerPro.Modules.Auth.Infrastructure.Services;
 using AutoDealerPro.Modules.Auth.Infrastructure.Util;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using FluentValidation;
@@ -29,7 +29,7 @@ public class AuthModule : IModule
     {
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddSingleton<IUserRepository, InMemoryUserRepository>();
-        services.AddScoped<IJwtTokenGenerator,JwtTokenGenerator>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IAuthService, AuthService>();
 
