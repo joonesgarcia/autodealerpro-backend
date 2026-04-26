@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\AutoDealerPro.Shared.Abstractions\AutoDealerPro.Shared.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\AutoDealerPro.Shared.Infrastructure\AutoDealerPro.Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Inventory\AutoDealerPro.Modules.Inventory.Core\AutoDealerPro.Modules.Inventory.Core.csproj" />
     <ProjectReference Include="..\AutoDealerPro.Modules.Leads.Core\AutoDealerPro.Modules.Leads.Core.csproj" />
     <ProjectReference Include="..\AutoDealerPro.Modules.Leads.Application\AutoDealerPro.Modules.Leads.Application.csproj" />
   </ItemGroup>

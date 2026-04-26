@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDealerPro.Modules.Auth.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDealerPro.Modules.Auth.Core", "src\Modules\Auth\AutoDealerPro.Modules.Auth.Core\AutoDealerPro.Modules.Auth.Core\AutoDealerPro.Modules.Auth.Core.csproj", "{318589B2-FD17-4CA6-9C02-4CCA7EABA838}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDealerPro.Shared.Infrastructure", "src\Shared\AutoDealerPro.Shared.Infrastructure\AutoDealerPro.Shared.Infrastructure.csproj", "{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,18 @@ Global
 		{318589B2-FD17-4CA6-9C02-4CCA7EABA838}.Release|x64.Build.0 = Release|Any CPU
 		{318589B2-FD17-4CA6-9C02-4CCA7EABA838}.Release|x86.ActiveCfg = Release|Any CPU
 		{318589B2-FD17-4CA6-9C02-4CCA7EABA838}.Release|x86.Build.0 = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|x64.Build.0 = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|x64.Build.0 = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +220,7 @@ Global
 		{221BDDF9-3D53-43D3-9340-69C7A328E58A} = {EC447DCF-ABFA-6E24-52A5-D7FD48A5C558}
 		{18901A10-87B9-4D21-14FC-B9C2CA2CAD63} = {221BDDF9-3D53-43D3-9340-69C7A328E58A}
 		{318589B2-FD17-4CA6-9C02-4CCA7EABA838} = {221BDDF9-3D53-43D3-9340-69C7A328E58A}
+		{43CA671C-C20D-A5EA-9395-AADFE48C9EAE} = {C8E42992-5E42-0C2B-DBFE-AA848D06431C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDF52DF1-409C-4C61-B1D0-4CDA432616AA}

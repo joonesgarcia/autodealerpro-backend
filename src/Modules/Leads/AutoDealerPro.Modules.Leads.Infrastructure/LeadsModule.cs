@@ -1,10 +1,13 @@
-﻿using AutoDealerPro.Modules.Leads.Application.Interfaces;
+﻿using AutoDealerPro.Modules.Inventory.Core.Events;
+using AutoDealerPro.Modules.Leads.Application.Interfaces;
 using AutoDealerPro.Modules.Leads.Application.Requests;
 using AutoDealerPro.Modules.Leads.Application.Services;
 using AutoDealerPro.Modules.Leads.Application.Validators;
 using AutoDealerPro.Modules.Leads.Core.Repositories;
+using AutoDealerPro.Modules.Leads.Infrastructure.EventHandlers;
 using AutoDealerPro.Modules.Leads.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Leads.Infrastructure.Repositories;
+using AutoDealerPro.Shared.Abstractions.Events;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using FluentValidation;
 using Microsoft.AspNetCore.Routing;
@@ -30,6 +33,9 @@ public class LeadsModule : IModule
 
         // Services
         services.AddScoped<ILeadsService, LeadsService>();
+
+        // Event Handlers
+        services.AddScoped<IDomainEventHandler<VehicleSoldEvent>, CloseLeadsOnVehicleSold>();
 
         // Validators
         services.AddScoped<IValidator<CreateLeadRequest>, CreateLeadValidator>();

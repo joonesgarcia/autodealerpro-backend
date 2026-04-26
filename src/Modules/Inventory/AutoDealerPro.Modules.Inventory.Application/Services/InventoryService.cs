@@ -1,13 +1,16 @@
 using AutoDealerPro.Modules.Inventory.Application.Interfaces;
 using AutoDealerPro.Modules.Inventory.Application.Requests;
 using AutoDealerPro.Modules.Inventory.Application.Response;
+using AutoDealerPro.Modules.Inventory.Core.Events;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
+using AutoDealerPro.Shared.Abstractions.Events;
 
 namespace AutoDealerPro.Modules.Inventory.Application.Services;
 
-public class InventoryService(IVehicleRepository repository) : IInventoryService
+public class InventoryService(IVehicleRepository repository, IEventDispatcher eventDispatcher) : IInventoryService
 {
     private readonly IVehicleRepository _repository = repository;
+    private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
 
     public async Task<IEnumerable<VehicleListResponse>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12)
     {
@@ -30,10 +33,10 @@ public class InventoryService(IVehicleRepository repository) : IInventoryService
 
     public async Task<IEnumerable<VehicleListResponse>> SearchVehiclesAsync(VehicleSearchFilterRequest filter)
     {
-        var available = await _repository
-            .GetAvailableAsync(1, 1000); // get all available
-        
-        var query = available.AsQueryable(); // filter in memory 
+        var query = _repository
+            .GetAvailableAsync(1, 1000) // get all available, filter in memory for now
+            .Result
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(filter.Make))
             query = query.Where(v => v.Make.ToLower() == filter.Make.ToLower());
@@ -97,7 +100,12 @@ public class InventoryService(IVehicleRepository repository) : IInventoryService
     {
         var vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) throw new ArgumentException("Vehicle not found");
+
         vehicle.MarkAsSold(request.SellingPrice);
         await _repository.UpdateAsync(vehicle);
+
+        // Publish after persisting — any module that cares about this fact reacts here.
+        // In-process now; swap dispatcher for a broker impl when extracting to microservices.
+        await _eventDispatcher.Publish(new VehicleSoldEvent(vehicle.Id, request.SellingPrice));
     }
 }

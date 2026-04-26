@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../Shared/AutoDealerPro.Shared.Kernel/AutoDealerPro.Shared.Kernel.csproj" />
+    <ProjectReference Include="..\..\..\Shared\AutoDealerPro.Shared.Abstractions\AutoDealerPro.Shared.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
