@@ -2,6 +2,5 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ActiveDebugProfile>https</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>C:\Users\João G\source\repos\autodealerpro-backend\src\AutoDealerPro.Api\Properties\PublishProfiles\AutoDealerProApi20260516180321 - Zip Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
