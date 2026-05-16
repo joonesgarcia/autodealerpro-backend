@@ -18,13 +18,8 @@ public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtT
     {
         var validationResult = await _userRepository.ValidateAccountCreation(createAccountRequest);
 
-        switch (validationResult)
-        {
-            case AccountCreationValidationStatus.UsernameTaken:
-                return new CreateAccountResult(false, validationResult);
-            case AccountCreationValidationStatus.EmailTaken:
-                return new CreateAccountResult(false, validationResult);
-        }
+        if(validationResult != AccountCreationValidationStatus.Valid)
+            return new CreateAccountResult(false, validationResult);
 
         var user = new User()
         {
