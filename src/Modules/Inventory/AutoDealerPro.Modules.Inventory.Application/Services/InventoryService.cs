@@ -1,6 +1,11 @@
 using AutoDealerPro.Modules.Inventory.Application.Interfaces;
-using AutoDealerPro.Modules.Inventory.Application.Requests;
-using AutoDealerPro.Modules.Inventory.Application.Response;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
+using AutoDealerPro.Modules.Inventory.Application.Requests.Filter;
+using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
+using AutoDealerPro.Modules.Inventory.Application.Responses;
 using AutoDealerPro.Modules.Inventory.Core.Events;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Shared.Abstractions.Events;
@@ -12,31 +17,28 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
     private readonly IVehicleRepository _repository = repository;
     private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
 
-    public async Task<IEnumerable<VehicleListResponse>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12)
+    public async Task<IEnumerable<VehicleBasicViewResponse>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12)
     {
         IEnumerable<Core.Entities.Vehicle> vehicles = await _repository.GetAvailableAsync(page, pageSize);
-        return vehicles.Select(v => new VehicleListResponse(
+        return vehicles.Select(v => new VehicleBasicViewResponse(
             v.Id, v.Make, v.Model, v.Year, v.Trim, v.Mileage, v.ExteriorColor, v.Transmission, v.FuelType, v.BodyType, v.AskingPrice, v.PhotoUrls.FirstOrDefault() ?? "", v.ViewCount
         ));
     }
 
-    public async Task<VehicleDetailResponse?> GetVehicleByIdAsync(Guid id)
+    public async Task<VehicleDetailedViewResponse?> GetVehicleByIdAsync(Guid id)
     {
         Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) return null;
         vehicle.IncrementViewCount();
         await _repository.UpdateAsync(vehicle);
-        return new VehicleDetailResponse(
+        return new VehicleDetailedViewResponse(
             vehicle.Id, vehicle.Make, vehicle.Model, vehicle.Year, vehicle.PlateNumber, vehicle.Trim, vehicle.Mileage, vehicle.ExteriorColor, vehicle.InteriorColor, vehicle.Transmission, vehicle.FuelType, vehicle.BodyType, vehicle.AskingPrice, vehicle.Status.ToString(), vehicle.PhotoUrls, vehicle.ViewCount, vehicle.CreatedAt
         );
     }
 
-    public async Task<IEnumerable<VehicleListResponse>> SearchVehiclesAsync(VehicleSearchFilterRequest filter)
+    public async Task<IEnumerable<VehicleBasicViewResponse>> SearchVehiclesAsync(VehicleFilterRequest filter)
     {
-        IQueryable<Core.Entities.Vehicle> query = _repository
-            .GetAvailableAsync(1, 1000) // get all available, filter in memory for now
-            .Result
-            .AsQueryable();
+        IEnumerable<Core.Entities.Vehicle> query = await _repository.GetAvailableAsync(1, 1000);
 
         if (!string.IsNullOrEmpty(filter.Make))
             query = query.Where(v => v.Make.ToLower() == filter.Make.ToLower());
@@ -55,19 +57,19 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
         if (!string.IsNullOrEmpty(filter.FuelType))
             query = query.Where(v => v.FuelType.ToLower() == filter.FuelType.ToLower());
 
-        List<Core.Entities.Vehicle> vehicles = query.ToList();
-        return vehicles.Select(v => new VehicleListResponse(
+        List<Core.Entities.Vehicle> vehicles = [.. query];
+        return vehicles.Select(v => new VehicleBasicViewResponse(
             v.Id, v.Make, v.Model, v.Year, v.Trim, v.Mileage, v.ExteriorColor, v.Transmission, v.FuelType, v.BodyType, v.AskingPrice, v.PhotoUrls.FirstOrDefault() ?? "", v.ViewCount
         ));
     }
 
-    public async Task<VehicleStaffResponse> CreateVehicleAsync(CreateVehicleRequest request)
+    public async Task<VehicleStaffViewResponse> CreateVehicleAsync(AddVehicleRequest request)
     {
         Core.Entities.Vehicle vehicle = AutoDealerPro.Modules.Inventory.Core.Entities.Vehicle.Create(
             request.Make, request.Model, request.Year, request.PlateNumber, request.Trim, request.Mileage, request.ExteriorColor, request.InteriorColor, request.Transmission, request.FuelType, request.BodyType, request.PurchasePrice, request.AskingPrice, request.Notes
         );
         await _repository.AddAsync(vehicle);
-        return new VehicleStaffResponse(
+        return new VehicleStaffViewResponse(
             vehicle.Id, vehicle.Make, vehicle.Model, vehicle.Year, vehicle.PlateNumber, vehicle.Trim, vehicle.Mileage, vehicle.ExteriorColor, vehicle.InteriorColor, vehicle.Transmission, vehicle.FuelType, vehicle.BodyType, vehicle.PurchasePrice, vehicle.AskingPrice, vehicle.SellingPrice, vehicle.Status.ToString(), vehicle.Notes, vehicle.PhotoUrls, vehicle.ViewCount, vehicle.CreatedAt, vehicle.SoldAt
         );
     }

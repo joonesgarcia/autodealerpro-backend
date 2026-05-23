@@ -1,6 +1,6 @@
-namespace AutoDealerPro.Modules.Inventory.Application.Response;
+namespace AutoDealerPro.Modules.Inventory.Application.Responses;
 
-public record VehicleDetailResponse(
+public record VehicleDetailedViewResponse(
     Guid Id,
     string Make,
     string Model,

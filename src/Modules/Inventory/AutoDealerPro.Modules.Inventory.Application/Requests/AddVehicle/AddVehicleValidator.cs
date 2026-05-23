@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace AutoDealerPro.Modules.Inventory.Application.Validators;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
 
-public class CreateVehicleValidator : AbstractValidator<Requests.CreateVehicleRequest>
+public class AddVehicleValidator : AbstractValidator<AddVehicleRequest>
 {
-    public CreateVehicleValidator()
+    public AddVehicleValidator()
     {
         RuleFor(x => x.Make).NotEmpty();
         RuleFor(x => x.Model).NotEmpty();

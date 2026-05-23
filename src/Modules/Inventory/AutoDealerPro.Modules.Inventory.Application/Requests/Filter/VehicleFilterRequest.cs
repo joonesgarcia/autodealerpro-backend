@@ -1,6 +1,6 @@
-namespace AutoDealerPro.Modules.Inventory.Application.Requests;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests.Filter;
 
-public class VehicleSearchFilterRequest
+public class VehicleFilterRequest
 {
     public string? Make { get; set; }
     public string? Model { get; set; }

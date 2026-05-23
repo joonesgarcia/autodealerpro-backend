@@ -1,6 +1,11 @@
 ﻿using AutoDealerPro.Modules.Inventory.Application.Interfaces;
-using AutoDealerPro.Modules.Inventory.Application.Requests;
-using AutoDealerPro.Modules.Inventory.Application.Response;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
+using AutoDealerPro.Modules.Inventory.Application.Requests.Filter;
+using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
+using AutoDealerPro.Modules.Inventory.Application.Responses;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -19,48 +24,48 @@ public static class InventoryEndpoints
 
         group.MapGet("", async ([FromServices] IInventoryService service, int page, int pageSize) =>
         {
-            IEnumerable<VehicleListResponse> vehicles = await service.GetAvailableVehiclesAsync(page, pageSize);
+            IEnumerable<VehicleBasicViewResponse> vehicles = await service.GetAvailableVehiclesAsync(page, pageSize);
             return Results.Ok(vehicles);
         })
         .AllowAnonymous()
         .WithName("GetAvailableVehicles")
         .WithSummary("Browse available vehicles")
-        .Produces<IEnumerable<VehicleListResponse>>();
+        .Produces<IEnumerable<VehicleBasicViewResponse>>();
 
         group.MapGet("{id:guid}", async (Guid id, [FromServices] IInventoryService service) =>
         {
-            VehicleDetailResponse? vehicle = await service.GetVehicleByIdAsync(id);
+            VehicleDetailedViewResponse? vehicle = await service.GetVehicleByIdAsync(id);
             if (vehicle == null) return Results.NotFound();
             return Results.Ok(vehicle);
         })
         .AllowAnonymous()
         .WithName("GetVehicleById")
         .WithSummary("Get vehicle details")
-        .Produces<VehicleDetailResponse>()
+        .Produces<VehicleDetailedViewResponse>()
         .Produces(404);
 
-        group.MapGet("search", async ([FromServices] IInventoryService service, [AsParameters] VehicleSearchFilterRequest filter) =>
+        group.MapGet("search", async ([FromServices] IInventoryService service, [AsParameters] VehicleFilterRequest filter) =>
         {
-            IEnumerable<VehicleListResponse> vehicles = await service.SearchVehiclesAsync(filter);
+            IEnumerable<VehicleBasicViewResponse> vehicles = await service.SearchVehiclesAsync(filter);
             return Results.Ok(vehicles);
         })
         .AllowAnonymous()
         .WithName("SearchVehicles")
         .WithSummary("Search and filter vehicles")
-        .Produces<IEnumerable<VehicleListResponse>>();
+        .Produces<IEnumerable<VehicleBasicViewResponse>>();
 
-        group.MapPost("", async ([FromServices] IInventoryService service, [FromServices] IValidator<CreateVehicleRequest> validator, CreateVehicleRequest request) =>
+        group.MapPost("", async ([FromServices] IInventoryService service, [FromServices] IValidator<AddVehicleRequest> validator, AddVehicleRequest request) =>
         {
             FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            VehicleStaffResponse vehicle = await service.CreateVehicleAsync(request);
+            VehicleStaffViewResponse vehicle = await service.CreateVehicleAsync(request);
             return Results.Created($"/api/vehicles/{vehicle.Id}", vehicle);
         })
         .RequireAuthorization("StaffOnly")
         .WithName("CreateVehicle")
         .WithSummary("Add new vehicle (staff only)")
-        .Produces<VehicleStaffResponse>(201)
+        .Produces<VehicleStaffViewResponse>(201)
         .Produces(400)
         .Produces(401);
 

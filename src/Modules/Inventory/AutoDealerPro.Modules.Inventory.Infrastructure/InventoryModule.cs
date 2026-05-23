@@ -1,7 +1,10 @@
 ﻿using AutoDealerPro.Modules.Inventory.Application.Interfaces;
-using AutoDealerPro.Modules.Inventory.Application.Requests;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
+using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
+using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
+using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Services;
-using AutoDealerPro.Modules.Inventory.Application.Validators;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Repositories;
@@ -30,7 +33,7 @@ public class InventoryModule : IModule
 
         // Validators
         services.AddScoped<IValidator<AddPhotoRequest>, AddPhotoValidator>();
-        services.AddScoped<IValidator<CreateVehicleRequest>, CreateVehicleValidator>();
+        services.AddScoped<IValidator<AddVehicleRequest>, AddVehicleValidator>();
         services.AddScoped<IValidator<MarkAsSoldRequest>, MarkAsSoldValidator>();
         services.AddScoped<IValidator<UpdateMileageRequest>, UpdateMileageValidator>();
         services.AddScoped<IValidator<UpdatePriceRequest>, UpdatePriceValidator>();

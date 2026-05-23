@@ -1,7 +1,6 @@
-namespace AutoDealerPro.Modules.Inventory.Application.Response;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
 
-public record VehicleStaffResponse(
-    Guid Id,
+public record AddVehicleRequest(
     string Make,
     string Model,
     int Year,
@@ -15,11 +14,5 @@ public record VehicleStaffResponse(
     string BodyType,
     decimal PurchasePrice,
     decimal AskingPrice,
-    decimal? SellingPrice,
-    string Status,
-    string? Notes,
-    List<string> PhotoUrls,
-    int ViewCount,
-    DateTime CreatedAt,
-    DateTime? SoldAt
+    string? Notes
 );

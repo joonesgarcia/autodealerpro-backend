@@ -1,8 +1,8 @@
 using FluentValidation;
 
-namespace AutoDealerPro.Modules.Inventory.Application.Validators;
+namespace AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
 
-public class AddPhotoValidator : AbstractValidator<Requests.AddPhotoRequest>
+public class AddPhotoValidator : AbstractValidator<AddPhotoRequest>
 {
     public AddPhotoValidator()
     {

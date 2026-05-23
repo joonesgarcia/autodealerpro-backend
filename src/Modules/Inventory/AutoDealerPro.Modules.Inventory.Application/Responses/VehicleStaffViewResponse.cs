@@ -1,6 +1,7 @@
-namespace AutoDealerPro.Modules.Inventory.Application.Requests;
+namespace AutoDealerPro.Modules.Inventory.Application.Responses;
 
-public record CreateVehicleRequest(
+public record VehicleStaffViewResponse(
+    Guid Id,
     string Make,
     string Model,
     int Year,
@@ -14,5 +15,11 @@ public record CreateVehicleRequest(
     string BodyType,
     decimal PurchasePrice,
     decimal AskingPrice,
-    string? Notes
+    decimal? SellingPrice,
+    string Status,
+    string? Notes,
+    List<string> PhotoUrls,
+    int ViewCount,
+    DateTime CreatedAt,
+    DateTime? SoldAt
 );
