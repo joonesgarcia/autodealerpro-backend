@@ -22,7 +22,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task<IEnumerable<Lead>> GetByStatusAsync(LeadStatus status, int page = 1, int pageSize = 10)
         {
-            var skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
             return await _context.Leads
                 .Where(l => l.Status == status)
                 .Include(l => l.FollowUps)
@@ -34,7 +34,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task<IEnumerable<Lead>> GetByTypeAsync(LeadType type, int page = 1, int pageSize = 10)
         {
-            var skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
             return await _context.Leads
                 .Where(l => l.Type == type)
                 .Include(l => l.FollowUps)
@@ -46,7 +46,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task<IEnumerable<Lead>> GetAssignedToStaffAsync(Guid staffId, int page = 1, int pageSize = 10)
         {
-            var skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
             return await _context.Leads
                 .Where(l => l.AssignedToStaffId == staffId)
                 .Include(l => l.FollowUps)
@@ -65,8 +65,8 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task<IEnumerable<Lead>> GetPendingFollowUpsAsync(int page = 1, int pageSize = 10)
         {
-            var skip = (page - 1) * pageSize;
-            var today = DateTime.UtcNow.Date;
+            int skip = (page - 1) * pageSize;
+            DateTime today = DateTime.UtcNow.Date;
 
             return await _context.Leads
                 .Where(l => l.FollowUps.Any(f => f.NextFollowUpDate <= today && f.NextFollowUpDate != null))
@@ -79,7 +79,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task<IEnumerable<Lead>> GetAllAsync(int page = 1, int pageSize = 10)
         {
-            var skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
             return await _context.Leads
                 .Include(l => l.FollowUps)
                 .OrderByDescending(l => l.CreatedAt)
@@ -103,7 +103,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task DeleteAsync(Guid id)
         {
-            var lead = await _context.Leads.FindAsync(id);
+            Lead? lead = await _context.Leads.FindAsync(id);
             if (lead is not null)
             {
                 _context.Leads.Remove(lead);

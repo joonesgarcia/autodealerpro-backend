@@ -1,7 +1,6 @@
-﻿using AutoDealerPro.Modules.Auth.Core.Requests;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace AutoDealerPro.Modules.Auth.Core.Validators;
+namespace AutoDealerPro.Modules.Auth.Core.Requests.Login;
 
 public class LoginValidator : AbstractValidator<LoginRequest>
 {

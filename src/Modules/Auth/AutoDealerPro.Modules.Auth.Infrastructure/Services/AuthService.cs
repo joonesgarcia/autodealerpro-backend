@@ -1,10 +1,10 @@
-﻿using AutoDealerPro.Modules.Auth.Application.Interface;
-using AutoDealerPro.Modules.Auth.Core.Entities;
+﻿using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
+using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.Login;
+using AutoDealerPro.Modules.Auth.Core.Result;
+using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using Microsoft.AspNetCore.Identity;
 namespace AutoDealerPro.Modules.Auth.Infrastructure.Services;
 
@@ -16,12 +16,12 @@ public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtT
 
     public async Task<CreateAccountResult> HandleCreateAccount(CreateAccountRequest createAccountRequest)
     {
-        var validationResult = await _userRepository.ValidateAccountCreation(createAccountRequest);
+        AccountCreationValidationStatus validationResult = await _userRepository.ValidateAccountCreation(createAccountRequest);
 
-        if(validationResult != AccountCreationValidationStatus.Valid)
+        if (validationResult != AccountCreationValidationStatus.Valid)
             return new CreateAccountResult(false, validationResult);
 
-        var user = new User()
+        User user = new User()
         {
             Id = Guid.NewGuid(),
             Email = createAccountRequest.Email,
@@ -39,15 +39,15 @@ public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtT
 
     public async Task<LoginResult> HandleLogin(LoginRequest loginRequest)
     {
-        var user = await _userRepository.GetBy(loginRequest.Username);
+        User? user = await _userRepository.GetBy(loginRequest.Username);
         if (user == null) return new LoginResult(LoginStatus.InvalidCredentials, null);
 
-        var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
+        PasswordVerificationResult verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
 
         if (verificationResult is not PasswordVerificationResult.Success)
             return new LoginResult(LoginStatus.InvalidCredentials, null);
 
-        var token = _jwtTokenGenerator.GenerateToken(user);
+        string? token = _jwtTokenGenerator.GenerateToken(user);
 
         return await Task.FromResult(new LoginResult(LoginStatus.Success, token));
 

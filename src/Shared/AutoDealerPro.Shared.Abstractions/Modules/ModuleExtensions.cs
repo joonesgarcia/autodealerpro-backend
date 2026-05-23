@@ -6,7 +6,7 @@ public static class ModuleExtensions
 {
     public static void MapEndpoints(this WebApplication app, List<IModule> modules)
     {
-        foreach (var module in modules)
+        foreach (IModule module in modules)
         {
             module.MapEndpoints(app);
         }

@@ -8,13 +8,13 @@ using AutoDealerPro.Shared.Abstractions.Modules;
 using AutoDealerPro.Shared.Infrastructure.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 #region ::: Swagger :::
 builder.Services.AddEndpointsApiExplorer();
@@ -54,7 +54,7 @@ builder.Services.AddScoped<IEventDispatcher, InProcessEventDispatcher>();
 #endregion
 
 #region ::: Modules :::
-var modules = new List<IModule>
+List<IModule> modules = new List<IModule>
 {
     new InventoryModule(),
     new LeadsModule(),
@@ -83,7 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 #endregion
 
 #region ::: Authorization :::
-var requireAuthPolicy = new AuthorizationPolicyBuilder()
+AuthorizationPolicy requireAuthPolicy = new AuthorizationPolicyBuilder()
     .RequireAuthenticatedUser()
     .Build();
 
@@ -93,14 +93,14 @@ builder.Services.AddAuthorizationBuilder()
     .SetFallbackPolicy(requireAuthPolicy);
 #endregion
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-using var scope = app.Services.CreateScope();
+using IServiceScope scope = app.Services.CreateScope();
 
-var inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
 inventoryDb.Database.Migrate();
 
-var leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
+LeadsDbContext leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
 leadsDb.Database.Migrate();
 
 app.UseSwagger();

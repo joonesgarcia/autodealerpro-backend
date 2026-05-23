@@ -19,7 +19,7 @@ public class VehicleRepository(InventoryDbContext context) : IVehicleRepository
 
     public async Task<IEnumerable<Vehicle>> GetAvailableAsync(int page, int pageSize)
     {
-        var skip = (page - 1) * pageSize;
+        int skip = (page - 1) * pageSize;
         return await _context.Vehicles
             .Where(v => v.Status == VehicleStatus.Available)
             .OrderByDescending(v => v.CreatedAt)

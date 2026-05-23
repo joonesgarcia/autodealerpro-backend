@@ -8,9 +8,9 @@ public class InProcessEventDispatcher(IServiceProvider serviceProvider) : IEvent
     public async Task Publish<T>(T @event, CancellationToken ct = default)
         where T : IDomainEvent
     {
-        var handlers = serviceProvider.GetServices<IDomainEventHandler<T>>();
+        IEnumerable<IDomainEventHandler<T>> handlers = serviceProvider.GetServices<IDomainEventHandler<T>>();
 
-        foreach (var handler in handlers)
+        foreach (IDomainEventHandler<T> handler in handlers)
             await handler.Handle(@event, ct);
     }
 }

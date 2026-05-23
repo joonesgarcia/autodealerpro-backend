@@ -13,13 +13,13 @@ public static class InventoryEndpoints
 {
     public static void MapInventoryEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/vehicles")
+        RouteGroupBuilder group = endpoints.MapGroup("/api/vehicles")
             .WithTags("Vehicles");
 
 
         group.MapGet("", async ([FromServices] IInventoryService service, int page, int pageSize) =>
         {
-            var vehicles = await service.GetAvailableVehiclesAsync(page, pageSize);
+            IEnumerable<VehicleListResponse> vehicles = await service.GetAvailableVehiclesAsync(page, pageSize);
             return Results.Ok(vehicles);
         })
         .AllowAnonymous()
@@ -29,7 +29,7 @@ public static class InventoryEndpoints
 
         group.MapGet("{id:guid}", async (Guid id, [FromServices] IInventoryService service) =>
         {
-            var vehicle = await service.GetVehicleByIdAsync(id);
+            VehicleDetailResponse? vehicle = await service.GetVehicleByIdAsync(id);
             if (vehicle == null) return Results.NotFound();
             return Results.Ok(vehicle);
         })
@@ -41,7 +41,7 @@ public static class InventoryEndpoints
 
         group.MapGet("search", async ([FromServices] IInventoryService service, [AsParameters] VehicleSearchFilterRequest filter) =>
         {
-            var vehicles = await service.SearchVehiclesAsync(filter);
+            IEnumerable<VehicleListResponse> vehicles = await service.SearchVehiclesAsync(filter);
             return Results.Ok(vehicles);
         })
         .AllowAnonymous()
@@ -51,10 +51,10 @@ public static class InventoryEndpoints
 
         group.MapPost("", async ([FromServices] IInventoryService service, [FromServices] IValidator<CreateVehicleRequest> validator, CreateVehicleRequest request) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
-            var vehicle = await service.CreateVehicleAsync(request);
+            VehicleStaffResponse vehicle = await service.CreateVehicleAsync(request);
             return Results.Created($"/api/vehicles/{vehicle.Id}", vehicle);
         })
         .RequireAuthorization("StaffOnly")
@@ -66,7 +66,7 @@ public static class InventoryEndpoints
 
         group.MapPut("{id:guid}/price", async (Guid id, UpdatePriceRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdatePriceRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
             try
@@ -88,7 +88,7 @@ public static class InventoryEndpoints
 
         group.MapPut("{id:guid}/mileage", async (Guid id, UpdateMileageRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<UpdateMileageRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
             try
@@ -110,7 +110,7 @@ public static class InventoryEndpoints
 
         group.MapPost("{id:guid}/photos", async (Guid id, AddPhotoRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<AddPhotoRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
             try
@@ -132,7 +132,7 @@ public static class InventoryEndpoints
 
         group.MapPost("{id:guid}/mark-sold", async (Guid id, MarkAsSoldRequest request, [FromServices] IInventoryService service, [FromServices] IValidator<MarkAsSoldRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
             try

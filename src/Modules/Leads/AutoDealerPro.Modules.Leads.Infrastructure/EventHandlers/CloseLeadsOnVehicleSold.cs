@@ -10,12 +10,12 @@ public class CloseLeadsOnVehicleSold(ILeadRepository leadRepository)
 {
     public async Task Handle(VehicleSoldEvent @event, CancellationToken ct = default)
     {
-        var leads = await leadRepository.GetByVehicleIdAsync(@event.VehicleId);
+        IEnumerable<Core.Entities.Lead> leads = await leadRepository.GetByVehicleIdAsync(@event.VehicleId);
 
-        var openLeads = leads.Where(l =>
+        IEnumerable<Core.Entities.Lead> openLeads = leads.Where(l =>
             l.Status is not LeadStatus.Converted and not LeadStatus.Lost);
 
-        foreach (var lead in openLeads)
+        foreach (Core.Entities.Lead? lead in openLeads)
         {
             lead.MarkAsClosed(converted: false);
             await leadRepository.UpdateAsync(lead);

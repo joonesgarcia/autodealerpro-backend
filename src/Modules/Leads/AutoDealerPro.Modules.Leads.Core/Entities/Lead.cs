@@ -71,7 +71,7 @@ public class Lead : EntityBase
 
     public void AddFollowUp(string notes, DateTime? nextFollowUpDate = null)
     {
-        var followUp = new FollowUp
+        FollowUp followUp = new FollowUp
         {
             Id = Guid.NewGuid(),
             LeadId = Id,

@@ -1,6 +1,7 @@
-using AutoDealerPro.Modules.Auth.Application.Interface;
-using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
+using AutoDealerPro.Modules.Auth.Core.Interface;
+using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.Login;
+using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,16 +13,16 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/auth").WithTags("Auth");
+        RouteGroupBuilder group = endpoints.MapGroup("/api/auth").WithTags("Auth");
 
         group.MapPost("/login", async (LoginRequest request, IAuthService service, IValidator<LoginRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
 
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
 
-            var loginResult = await service.HandleLogin(request);
+            Core.Result.LoginResult loginResult = await service.HandleLogin(request);
 
             return loginResult.Status == LoginStatus.Success ?
                 Results.Ok(new { token = loginResult.Token }) :
@@ -32,12 +33,12 @@ public static class AuthEndpoints
 
         group.MapPost("/register", async (CreateAccountRequest request, IAuthService service, IValidator<CreateAccountRequest> validator) =>
         {
-            var validation = await validator.ValidateAsync(request);
+            FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
 
             if (!validation.IsValid)
                 return Results.BadRequest(validation.Errors);
 
-            var accountCreationResult = await service.HandleCreateAccount(request);
+            Core.Result.CreateAccountResult accountCreationResult = await service.HandleCreateAccount(request);
 
             return accountCreationResult.Created ?
                 Results.Created() :

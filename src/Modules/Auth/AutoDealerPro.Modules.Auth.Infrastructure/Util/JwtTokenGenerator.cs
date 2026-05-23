@@ -17,16 +17,16 @@ public class JwtTokenGenerator(IConfiguration config) : IJwtTokenGenerator
     {
         if (user == null) return null;
 
-        var claims = new List<Claim>
+        List<Claim> claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.Username)
         };
         claims.AddRange(user.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["ApiSettings:Secret"] ?? ""));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var token = new JwtSecurityToken(
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["ApiSettings:Secret"] ?? ""));
+        SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        JwtSecurityToken token = new JwtSecurityToken(
             issuer: _config["ApiSettings:Issuer"],
             audience: _config["ApiSettings:Audience"],
             claims: claims,

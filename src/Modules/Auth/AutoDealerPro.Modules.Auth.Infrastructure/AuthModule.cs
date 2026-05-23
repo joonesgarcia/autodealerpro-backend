@@ -1,9 +1,8 @@
-using AutoDealerPro.Modules.Auth.Application.Interface;
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.Validators;
+using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.Login;
 using AutoDealerPro.Modules.Auth.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Auth.Infrastructure.Services;
 using AutoDealerPro.Modules.Auth.Infrastructure.Util;

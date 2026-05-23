@@ -1,7 +1,7 @@
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests;
-using AutoDealerPro.Modules.Auth.Core.ResultObjects.Enums;
+using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace AutoDealerPro.Modules.Auth.Infrastructure.Persistence;
@@ -19,7 +19,7 @@ public class InMemoryUserRepository : IUserRepository
 
     public InMemoryUserRepository()
     {
-        var mockAdmin = _users.First();
+        User mockAdmin = _users.First();
         mockAdmin.PasswordHash = new PasswordHasher<User>().HashPassword(mockAdmin, "astrongpassword");
     }
 
@@ -28,10 +28,10 @@ public class InMemoryUserRepository : IUserRepository
 
     public async Task<AccountCreationValidationStatus> ValidateAccountCreation(CreateAccountRequest createAccountRequest)
     {
-        var validEmail = await IsValidEmail(createAccountRequest.Email);
+        bool validEmail = await IsValidEmail(createAccountRequest.Email);
         if (!validEmail) return await Task.FromResult(AccountCreationValidationStatus.EmailTaken);
 
-        var validUsername = await IsValidUserName(createAccountRequest.Username);
+        bool validUsername = await IsValidUserName(createAccountRequest.Username);
         if (!validUsername) return await Task.FromResult(AccountCreationValidationStatus.UsernameTaken);
 
         return await Task.FromResult(AccountCreationValidationStatus.Valid);

@@ -14,17 +14,17 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
     {
         public static void MapLeadsEndpoints(this IEndpointRouteBuilder endpoints)
         {
-            var group = endpoints.MapGroup("/api/leads")
+            RouteGroupBuilder group = endpoints.MapGroup("/api/leads")
                 .WithTags("Leads");
 
 
 
             group.MapPost("", async (CreateLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<CreateLeadRequest> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(request);
+                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                var result = await service.CreateLeadAsync(request);
+                LeadDetailResponse result = await service.CreateLeadAsync(request);
                 return Results.Created($"/api/leads/{result.Id}", result);
             })
                 .AllowAnonymous()
@@ -37,7 +37,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
             {
                 try
                 {
-                    var result = await service.GetLeadByIdAsync(id);
+                    LeadDetailResponse result = await service.GetLeadByIdAsync(id);
                     return Results.Ok(result);
                 }
                 catch (LeadNotFoundException)
@@ -53,7 +53,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapGet("", async ([FromServices] ILeadsService service, int page, int pageSize) =>
             {
-                var leads = await service.GetAllLeadsAsync(page, pageSize);
+                IEnumerable<LeadListResponse> leads = await service.GetAllLeadsAsync(page, pageSize);
                 return Results.Ok(leads);
             })
                 .RequireAuthorization("StaffOnly")
@@ -66,7 +66,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
             {
                 try
                 {
-                    var leads = await service.GetLeadsByStatusAsync(status, page, pageSize);
+                    IEnumerable<LeadListResponse> leads = await service.GetLeadsByStatusAsync(status, page, pageSize);
                     return Results.Ok(leads);
                 }
                 catch (ArgumentException ex)
@@ -84,7 +84,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
             {
                 try
                 {
-                    var leads = await service.GetLeadsByTypeAsync(type, page, pageSize);
+                    IEnumerable<LeadListResponse> leads = await service.GetLeadsByTypeAsync(type, page, pageSize);
                     return Results.Ok(leads);
                 }
                 catch (ArgumentException ex)
@@ -100,7 +100,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapGet("staff/{staffId:guid}", async (Guid staffId, [FromServices] ILeadsService service, int page, int pageSize) =>
             {
-                var leads = await service.GetLeadsAssignedToStaffAsync(staffId, page, pageSize);
+                IEnumerable<LeadListResponse> leads = await service.GetLeadsAssignedToStaffAsync(staffId, page, pageSize);
                 return Results.Ok(leads);
             })
                 .RequireAuthorization("StaffOnly")
@@ -111,7 +111,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapGet("vehicle/{vehicleId:guid}", async (Guid vehicleId, [FromServices] ILeadsService service) =>
             {
-                var leads = await service.GetLeadsByVehicleIdAsync(vehicleId);
+                IEnumerable<LeadListResponse> leads = await service.GetLeadsByVehicleIdAsync(vehicleId);
                 return Results.Ok(leads);
             })
                 .RequireAuthorization("StaffOnly")
@@ -122,7 +122,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapGet("pending-followups", async ([FromServices] ILeadsService service, int page, int pageSize) =>
             {
-                var leads = await service.GetPendingFollowUpsAsync(page, pageSize);
+                IEnumerable<LeadListResponse> leads = await service.GetPendingFollowUpsAsync(page, pageSize);
                 return Results.Ok(leads);
             })
                 .RequireAuthorization("StaffOnly")
@@ -134,7 +134,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapPut("{id:guid}/assign", async (Guid id, AssignLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<AssignLeadRequest> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(request);
+                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
                 await service.AssignLeadToStaffAsync(id, request);
@@ -149,7 +149,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapPut("{id:guid}/contact", async (Guid id, MarkAsContactedRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<MarkAsContactedRequest> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(request);
+                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
                 await service.MarkLeadAsContactedAsync(id, request);
@@ -164,7 +164,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapPost("{id:guid}/followup", async (Guid id, AddFollowUpRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<AddFollowUpRequest> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(request);
+                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
                 await service.AddFollowUpAsync(id, request);
@@ -179,7 +179,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
 
             group.MapPut("{id:guid}/close", async (Guid id, CloseLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<CloseLeadRequest> validator) =>
             {
-                var validationResult = await validator.ValidateAsync(request);
+                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
                 if (!validationResult.IsValid)
                     return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
                 await service.CloseLeadAsync(id, request);

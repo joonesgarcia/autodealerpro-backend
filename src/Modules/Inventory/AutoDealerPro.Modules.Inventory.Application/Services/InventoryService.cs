@@ -14,7 +14,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task<IEnumerable<VehicleListResponse>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12)
     {
-        var vehicles = await _repository.GetAvailableAsync(page, pageSize);
+        IEnumerable<Core.Entities.Vehicle> vehicles = await _repository.GetAvailableAsync(page, pageSize);
         return vehicles.Select(v => new VehicleListResponse(
             v.Id, v.Make, v.Model, v.Year, v.Trim, v.Mileage, v.ExteriorColor, v.Transmission, v.FuelType, v.BodyType, v.AskingPrice, v.PhotoUrls.FirstOrDefault() ?? "", v.ViewCount
         ));
@@ -22,7 +22,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task<VehicleDetailResponse?> GetVehicleByIdAsync(Guid id)
     {
-        var vehicle = await _repository.GetByIdAsync(id);
+        Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) return null;
         vehicle.IncrementViewCount();
         await _repository.UpdateAsync(vehicle);
@@ -33,7 +33,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task<IEnumerable<VehicleListResponse>> SearchVehiclesAsync(VehicleSearchFilterRequest filter)
     {
-        var query = _repository
+        IQueryable<Core.Entities.Vehicle> query = _repository
             .GetAvailableAsync(1, 1000) // get all available, filter in memory for now
             .Result
             .AsQueryable();
@@ -55,7 +55,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
         if (!string.IsNullOrEmpty(filter.FuelType))
             query = query.Where(v => v.FuelType.ToLower() == filter.FuelType.ToLower());
 
-        var vehicles = query.ToList();
+        List<Core.Entities.Vehicle> vehicles = query.ToList();
         return vehicles.Select(v => new VehicleListResponse(
             v.Id, v.Make, v.Model, v.Year, v.Trim, v.Mileage, v.ExteriorColor, v.Transmission, v.FuelType, v.BodyType, v.AskingPrice, v.PhotoUrls.FirstOrDefault() ?? "", v.ViewCount
         ));
@@ -63,7 +63,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task<VehicleStaffResponse> CreateVehicleAsync(CreateVehicleRequest request)
     {
-        var vehicle = AutoDealerPro.Modules.Inventory.Core.Entities.Vehicle.Create(
+        Core.Entities.Vehicle vehicle = AutoDealerPro.Modules.Inventory.Core.Entities.Vehicle.Create(
             request.Make, request.Model, request.Year, request.PlateNumber, request.Trim, request.Mileage, request.ExteriorColor, request.InteriorColor, request.Transmission, request.FuelType, request.BodyType, request.PurchasePrice, request.AskingPrice, request.Notes
         );
         await _repository.AddAsync(vehicle);
@@ -74,7 +74,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task UpdatePriceAsync(Guid id, UpdatePriceRequest request)
     {
-        var vehicle = await _repository.GetByIdAsync(id);
+        Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) throw new ArgumentException("Vehicle not found");
         vehicle.UpdatePrice(request.NewPrice);
         await _repository.UpdateAsync(vehicle);
@@ -82,7 +82,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task UpdateMileageAsync(Guid id, UpdateMileageRequest request)
     {
-        var vehicle = await _repository.GetByIdAsync(id);
+        Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) throw new ArgumentException("Vehicle not found");
         vehicle.UpdateMileage(request.NewMileage);
         await _repository.UpdateAsync(vehicle);
@@ -90,7 +90,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task AddPhotoAsync(Guid id, AddPhotoRequest request)
     {
-        var vehicle = await _repository.GetByIdAsync(id);
+        Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) throw new ArgumentException("Vehicle not found");
         vehicle.AddPhoto(request.PhotoUrl);
         await _repository.UpdateAsync(vehicle);
@@ -98,7 +98,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task MarkAsSoldAsync(Guid id, MarkAsSoldRequest request)
     {
-        var vehicle = await _repository.GetByIdAsync(id);
+        Core.Entities.Vehicle? vehicle = await _repository.GetByIdAsync(id);
         if (vehicle == null) throw new ArgumentException("Vehicle not found");
 
         vehicle.MarkAsSold(request.SellingPrice);
