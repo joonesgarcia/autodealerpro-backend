@@ -95,13 +95,13 @@ builder.Services.AddAuthorizationBuilder()
 
 WebApplication app = builder.Build();
 
-using IServiceScope scope = app.Services.CreateScope();
+//using IServiceScope scope = app.Services.CreateScope();
 
-InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
-inventoryDb.Database.Migrate();
+//InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+//inventoryDb.Database.EnsureCreated();
 
-LeadsDbContext leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
-leadsDb.Database.Migrate();
+//LeadsDbContext leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
+//leadsDb.Database.EnsureCreated();
 
 app.UseSwagger();
 app.UseSwaggerUI();
