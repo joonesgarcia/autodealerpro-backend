@@ -10,6 +10,7 @@ public class Lead : EntityBase
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public string Phone { get; private set; }
+    public LeadPriority Priority { get; set; }
 
     // Inquiry Details
     public Guid VehicleId { get; private set; }
@@ -35,7 +36,7 @@ public class Lead : EntityBase
         string firstName, string lastName, string email, string phone,
         Guid vehicleId, LeadType type, string message,
         string? tradeInMake = null, string? tradeInModel = null,
-        int? tradeInYear = null, int? tradeInMileage = null)
+        int? tradeInYear = null, int? tradeInMileage = null, LeadPriority leadPriority = LeadPriority.Low)
     {
         return new Lead
         {
@@ -50,8 +51,15 @@ public class Lead : EntityBase
             TradeInMake = tradeInMake,
             TradeInModel = tradeInModel,
             TradeInYear = tradeInYear,
-            TradeInMileage = tradeInMileage
+            TradeInMileage = tradeInMileage,
+            Priority = leadPriority
         };
+    }
+
+    public void UpdateLeadPriority(LeadPriority newPriority)
+    {
+        Priority = newPriority;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public void AssignToStaff(Guid staffId)
@@ -73,7 +81,7 @@ public class Lead : EntityBase
     {
         FollowUp followUp = new FollowUp
         {
-            Id = Guid.NewGuid(),
+            //Id = Guid.NewGuid(), let DB create the PK, otherwise it will generate error
             LeadId = Id,
             Notes = notes,
             CreatedAt = DateTime.UtcNow,

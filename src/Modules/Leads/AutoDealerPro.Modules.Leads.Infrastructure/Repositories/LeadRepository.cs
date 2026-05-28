@@ -97,7 +97,6 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Repositories
 
         public async Task UpdateAsync(Lead lead)
         {
-            _context.Leads.Update(lead);
             await _context.SaveChangesAsync();
         }
 

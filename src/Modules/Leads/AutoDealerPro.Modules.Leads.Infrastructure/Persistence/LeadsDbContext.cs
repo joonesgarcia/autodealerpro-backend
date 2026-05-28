@@ -22,12 +22,14 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Persistence
                 entity.HasIndex(l => l.Email);
                 entity.HasIndex(l => l.AssignedToStaffId);
                 entity.HasIndex(l => l.CreatedAt);
+                entity.HasIndex(l => l.Priority);
 
                 // Customer Info
                 entity.Property(l => l.FirstName).HasMaxLength(100).IsRequired();
                 entity.Property(l => l.LastName).HasMaxLength(100).IsRequired();
                 entity.Property(l => l.Email).HasMaxLength(256).IsRequired();
                 entity.Property(l => l.Phone).HasMaxLength(20).IsRequired();
+                entity.Property(l => l.Priority).HasMaxLength(1).IsRequired();
 
                 // Inquiry Details
                 entity.Property(l => l.VehicleId).IsRequired();

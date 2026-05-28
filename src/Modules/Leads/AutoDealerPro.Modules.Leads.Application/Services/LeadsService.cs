@@ -174,8 +174,9 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
             lead.Type.ToString(),
             lead.Status.ToString(),
             lead.Message,
+            lead.Priority.ToString(),
             lead.AssignedToStaffId,
-            lead.CreatedAt
+            lead.CreatedAt       
         );
     }
 }

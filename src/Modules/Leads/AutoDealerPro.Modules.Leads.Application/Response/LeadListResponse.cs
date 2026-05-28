@@ -9,6 +9,7 @@ public record LeadListResponse(
     string Type,
     string Status,
     string Message,
+    string Priority,
     Guid? AssignedToStaffId,
     DateTime CreatedAt
 );

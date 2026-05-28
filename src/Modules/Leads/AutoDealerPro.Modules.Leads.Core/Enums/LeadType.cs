@@ -1,9 +1,8 @@
-﻿namespace AutoDealerPro.Modules.Leads.Core.Enums
+﻿namespace AutoDealerPro.Modules.Leads.Core.Enums;
+
+public enum LeadType
 {
-    public enum LeadType
-    {
-        GeneralInquiry,    // Just asking questions
-        TestDrive,         // Wants to test drive
-        TradeIn            // Has trade-in
-    }
+    GeneralInquiry,    // Just asking questions
+    TestDrive,         // Wants to test drive
+    TradeIn            // Has trade-in
 }
