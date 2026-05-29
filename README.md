@@ -8,6 +8,75 @@ AutoDealerPro is a comprehensive inventory and lead management system designed f
 
 The backend is built as a **modular monolith** using a **Plugin Architecture** pattern, allowing independent feature modules to be developed, tested, and maintained separately while running in the same process.
 
+## 🚀 How do I run this ?
+
+### Prerequisites
+
+- .NET 8 SDK
+- Docker Desktop
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/joonesgarcia/autodealerpro-backend.git
+   cd autodealerpro-backend
+   ```
+
+2. **Up the environment with docker**
+   ```bash
+   docker compose up
+   ```
+
+3. **Access Swagger Documentation**
+   ```
+   https://localhost:5001/swagger
+   ```
+
+4. **Test open endpoints or follow next steps for authentication**
+
+## 🔐 Authentication & Authorization
+
+### JWT Token Generation
+
+1. **Register a new user account**
+   ```bash
+   POST /auth/register
+   {
+     "username": "you_really_cool_username",
+     "email": "yourname@yourdomain.com",
+     "password": "SecurePassword123!"
+   }
+   ```
+
+2. **Login and get token**
+   ```bash
+   POST /auth/login
+   {
+     "username": "you_really_cool_username",
+     "password": "SecurePassword123!!"
+   }
+
+   or use a admin one:
+
+   POST /auth/login
+   {
+     "username": "theadministrator",
+     "password": "astrongpassword"
+   }
+   ```
+   Response:
+   ```json
+   {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   }
+   ```
+
+3. **Use token in requests, you can use it at swagger Authorize button (: **
+   ```bash
+   Authorization: Bearer <token>
+   ```
+
 ## 🏗️ Architecture
 
 ### Design Principles
@@ -207,100 +276,6 @@ FollowUp
 
 ---
 
-## ⚙️ Configuration
-
-### Required Settings (appsettings.json)
-
-```json
-{
-  "ApiSettings": {
-    "Secret": "your-long-secret-key-for-jwt-signing",
-    "Issuer": "your-domain.com",
-    "Audience": "your-domain.com"
-  },
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=autodealerpro;Username=postgres;Password=password"
-  }
-}
-```
-
-### Environment-Specific Configuration
-
-- `appsettings.Development.json` - Development settings (not in repo)
-- `appsettings.json` - Default production settings
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- .NET 8 SDK
-- PostgreSQL 12+
-- Visual Studio 2022 or VS Code with C# extensions
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/joonesgarcia/autodealerpro-backend.git
-   cd autodealerpro-backend
-   ```
-
-2. **Configure database connection**
-   ```bash
-   # Create appsettings.Development.json or update appsettings.json
-   # Set your PostgreSQL connection string
-   ```
-
-3. **Run database migrations**
-   ```bash
-   dotnet ef database update --project src/Modules/Inventory/AutoDealerPro.Modules.Inventory.Infrastructure
-   dotnet ef database update --project src/Modules/Leads/AutoDealerPro.Modules.Leads.Infrastructure
-   ```
-
-4. **Start the API**
-   ```bash
-   cd src/AutoDealerPro.Api
-   dotnet run
-   ```
-
-5. **Access Swagger Documentation**
-   ```
-   https://localhost:5001/swagger
-   ```
-
-## 🔐 Authentication & Authorization
-
-### JWT Token Generation
-
-1. **Register a new account**
-   ```bash
-   POST /auth/register
-   {
-     "username": "admin",
-     "email": "admin@dealership.com",
-     "password": "SecurePassword123!"
-   }
-   ```
-
-2. **Login and get token**
-   ```bash
-   POST /auth/login
-   {
-     "username": "admin",
-     "password": "SecurePassword123!"
-   }
-   ```
-   Response:
-   ```json
-   {
-     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-   }
-   ```
-
-3. **Use token in requests**
-   ```bash
-   Authorization: Bearer <token>
-   ```
 
 ## 🎯 Domain Events
 
