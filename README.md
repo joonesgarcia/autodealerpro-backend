@@ -30,7 +30,7 @@ The backend is built as a **modular monolith** using a **Plugin Architecture** p
 
 3. **Access Swagger Documentation**
    ```
-   https://localhost:5001/swagger
+   http://localhost:5001/swagger
    ```
 
 4. **Test open endpoints or follow next steps for authentication**
