@@ -97,6 +97,12 @@ WebApplication app = builder.Build();
 
 using IServiceScope scope = app.Services.CreateScope();
 
+// Applies migrations for both contexts, this is for helping set up the demo dev environment ONLY
+// NOT meant to be executed in production
+
+// In production, use proper migration tools or CI/CD pipelines to handle database migrations
+// A connection string with this kind of powers should not be used
+
 InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
 inventoryDb.Database.Migrate();
 
