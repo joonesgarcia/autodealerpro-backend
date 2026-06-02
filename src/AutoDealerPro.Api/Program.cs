@@ -4,6 +4,7 @@ using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Leads.Infrastructure;
 using AutoDealerPro.Modules.Leads.Infrastructure.Persistence;
 using AutoDealerPro.Shared.Abstractions.Events;
+using AutoDealerPro.Shared.Abstractions.Filter;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using AutoDealerPro.Shared.Infrastructure.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,13 +54,16 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IEventDispatcher, InProcessEventDispatcher>();
 #endregion
 
+builder.Services.AddControllers();
+builder.Services.AddScoped<ValidateRequestFilter>();
+
 #region ::: Modules :::
-List<IModule> modules = new List<IModule>
-{
+List<IModule> modules =
+[
     new InventoryModule(),
     new LeadsModule(),
     new AuthModule()
-};
+];
 modules.ForEach(module => module.Register(builder.Services, builder.Configuration));
 #endregion
 

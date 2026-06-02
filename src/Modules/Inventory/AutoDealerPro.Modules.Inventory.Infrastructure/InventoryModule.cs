@@ -6,10 +6,12 @@ using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
 using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Services;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
+using AutoDealerPro.Modules.Inventory.Infrastructure.Endpoints;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Repositories;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,16 +34,13 @@ public class InventoryModule : IModule
         services.AddScoped<IInventoryService, InventoryService>();
 
         // Validators
-        services.AddScoped<IValidator<AddPhotoRequest>, AddPhotoValidator>();
-        services.AddScoped<IValidator<AddVehicleRequest>, AddVehicleValidator>();
-        services.AddScoped<IValidator<MarkAsSoldRequest>, MarkAsSoldValidator>();
-        services.AddScoped<IValidator<UpdateMileageRequest>, UpdateMileageValidator>();
-        services.AddScoped<IValidator<UpdatePriceRequest>, UpdatePriceValidator>();
-
+        services.AddValidatorsFromAssembly(typeof(AddVehicleValidator).Assembly);
     }
 
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapInventoryEndpoints();
+        endpoints.MapControllers();
+        endpoints.MapVehicleQueryRoutes();
+
     }
 }
