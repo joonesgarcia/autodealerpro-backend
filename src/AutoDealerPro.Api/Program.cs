@@ -107,11 +107,11 @@ using IServiceScope scope = app.Services.CreateScope();
 // In production, use proper migration tools or CI/CD pipelines to handle database migrations
 // A connection string with this kind of powers should not be used
 
-InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
-inventoryDb.Database.Migrate();
+//InventoryDbContext inventoryDb = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+//inventoryDb.Database.Migrate();
 
-LeadsDbContext leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
-leadsDb.Database.Migrate();
+//LeadsDbContext leadsDb = scope.ServiceProvider.GetRequiredService<LeadsDbContext>();
+//leadsDb.Database.Migrate();
 
 app.UseSwagger();
 app.UseSwaggerUI();
