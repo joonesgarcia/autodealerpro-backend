@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoDealerPro.Shared.Abstractions.Filter;
 
@@ -13,9 +12,8 @@ public class ValidateRequestFilter : ActionFilterAttribute
         {
             var requestType = request.GetType();
             var validatorType = typeof(IValidator<>).MakeGenericType(requestType);
-            var validator = context.HttpContext.RequestServices.GetService(validatorType) as IValidator;
 
-            if (validator != null)
+            if (context.HttpContext.RequestServices.GetService(validatorType) is IValidator validator)
             {
                 var result = await validator.ValidateAsync(new ValidationContext<object>(request));
 

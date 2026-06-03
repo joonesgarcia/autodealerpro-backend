@@ -1,6 +1,5 @@
 ﻿using AutoDealerPro.Modules.Leads.Application.Exceptions;
 using AutoDealerPro.Modules.Leads.Application.Interfaces;
-using AutoDealerPro.Modules.Leads.Application.Requests;
 using AutoDealerPro.Modules.Leads.Application.Response;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -8,30 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace AutoDealerPro.Modules.Leads.Infrastructure
+namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
 {
-    public static class LeadsEndpoints
+    public static class LeadsQueryEndpoints
     {
-        public static void MapLeadsEndpoints(this IEndpointRouteBuilder endpoints)
+        public static void MapLeadsQueryRoutes(this IEndpointRouteBuilder endpoints)
         {
             RouteGroupBuilder group = endpoints.MapGroup("/api/leads")
                 .WithTags("Leads");
-
-
-
-            group.MapPost("", async (CreateLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<CreateLeadRequest> validator) =>
-            {
-                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
-                if (!validationResult.IsValid)
-                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                LeadDetailResponse result = await service.CreateLeadAsync(request);
-                return Results.Created($"/api/leads/{result.Id}", result);
-            })
-                .RequireAuthorization("StaffOnly")
-                .WithName("CreateLead")
-                .WithSummary("Submit a new lead (customer)")
-                .Produces<LeadDetailResponse>(201)
-                .Produces(400);
 
             group.MapGet("{id:guid}", async (Guid id, [FromServices] ILeadsService service) =>
             {
@@ -129,67 +112,6 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
                 .WithName("GetPendingFollowUps")
                 .WithSummary("Get leads with pending follow-ups (staff only)")
                 .Produces<IEnumerable<LeadListResponse>>()
-                .Produces(401);
-
-
-            group.MapPut("{id:guid}/assign", async (Guid id, AssignLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<AssignLeadRequest> validator) =>
-            {
-                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
-                if (!validationResult.IsValid)
-                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                await service.AssignLeadToStaffAsync(id, request);
-                return Results.NoContent();
-            })
-                .RequireAuthorization("StaffOnly")
-                .WithName("AssignLeadToStaff")
-                .WithSummary("Assign lead to staff member (staff only)")
-                .Produces(204)
-                .Produces(404)
-                .Produces(401);
-
-            group.MapPut("{id:guid}/contact", async (Guid id, MarkAsContactedRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<MarkAsContactedRequest> validator) =>
-            {
-                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
-                if (!validationResult.IsValid)
-                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                await service.MarkLeadAsContactedAsync(id, request);
-                return Results.NoContent();
-            })
-                .RequireAuthorization("StaffOnly")
-                .WithName("MarkLeadAsContacted")
-                .WithSummary("Mark lead as contacted with notes (staff only)")
-                .Produces(204)
-                .Produces(404)
-                .Produces(401);
-
-            group.MapPost("{id:guid}/followup", async (Guid id, AddFollowUpRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<AddFollowUpRequest> validator) =>
-            {
-                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
-                if (!validationResult.IsValid)
-                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                await service.AddFollowUpAsync(id, request);
-                return Results.NoContent();
-            })
-                .RequireAuthorization("StaffOnly")
-                .WithName("AddFollowUp")
-                .WithSummary("Add follow-up to lead (staff only)")
-                .Produces(204)
-                .Produces(404)
-                .Produces(401);
-
-            group.MapPut("{id:guid}/close", async (Guid id, CloseLeadRequest request, [FromServices] ILeadsService service, [FromServices] IValidator<CloseLeadRequest> validator) =>
-            {
-                FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request);
-                if (!validationResult.IsValid)
-                    return Results.BadRequest(new { errors = validationResult.Errors.Select(e => e.ErrorMessage) });
-                await service.CloseLeadAsync(id, request);
-                return Results.NoContent();
-            })
-                .RequireAuthorization("StaffOnly")
-                .WithName("CloseLead")
-                .WithSummary("Close lead as converted or lost (staff only)")
-                .Produces(204)
-                .Produces(404)
                 .Produces(401);
         }
     }

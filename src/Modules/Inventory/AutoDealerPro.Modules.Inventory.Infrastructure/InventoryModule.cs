@@ -1,9 +1,4 @@
 ﻿using AutoDealerPro.Modules.Inventory.Application.Interfaces;
-using AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
-using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
-using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
-using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
-using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Services;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Endpoints;
@@ -16,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace AutoDealerPro.Modules.Inventory.Infrastructure;
 
@@ -30,11 +26,10 @@ public class InventoryModule : IModule
                 b => b.MigrationsHistoryTable("__EFMigrationsHistory", "inventory")));
 
         services.AddScoped<IVehicleRepository, VehicleRepository>();
-
         services.AddScoped<IInventoryService, InventoryService>();
 
         // Validators
-        services.AddValidatorsFromAssembly(typeof(AddVehicleValidator).Assembly);
+        services.AddValidatorsFromAssembly(Assembly.Load("AutoDealerPro.Modules.Inventory.Application"));
     }
 
     public void MapEndpoints(IEndpointRouteBuilder endpoints)

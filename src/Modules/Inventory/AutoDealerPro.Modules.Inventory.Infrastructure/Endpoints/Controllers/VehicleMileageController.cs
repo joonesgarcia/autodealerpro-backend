@@ -1,7 +1,6 @@
 ﻿using AutoDealerPro.Modules.Inventory.Application.Interfaces;
 using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
 using AutoDealerPro.Shared.Abstractions.Filter;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

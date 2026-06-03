@@ -6,6 +6,7 @@ using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
 using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
 using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Responses;
+using AutoDealerPro.Modules.Inventory.Core.Entities;
 using AutoDealerPro.Modules.Inventory.Core.Events;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Shared.Abstractions.Events;
@@ -65,7 +66,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task<VehicleStaffViewResponse> CreateVehicleAsync(AddVehicleRequest request)
     {
-        Core.Entities.Vehicle vehicle = AutoDealerPro.Modules.Inventory.Core.Entities.Vehicle.Create(
+        Vehicle vehicle = Vehicle.Create(
             request.Make, request.Model, request.Year, request.PlateNumber, request.Trim, request.Mileage, request.ExteriorColor, request.InteriorColor, request.Transmission, request.FuelType, request.BodyType, request.PurchasePrice, request.AskingPrice, request.Notes
         );
         await _repository.AddAsync(vehicle);

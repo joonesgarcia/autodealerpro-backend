@@ -2,7 +2,6 @@
 using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
 using AutoDealerPro.Modules.Inventory.Application.Responses;
 using AutoDealerPro.Shared.Abstractions.Filter;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

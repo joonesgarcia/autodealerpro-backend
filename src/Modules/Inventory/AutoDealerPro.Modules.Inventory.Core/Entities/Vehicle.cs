@@ -41,13 +41,6 @@ public class Vehicle : EntityBase
         string transmission, string fuelType, string bodyType,
         decimal purchasePrice, decimal askingPrice, string? notes = null)
     {
-        // Simple validations
-        if (string.IsNullOrWhiteSpace(plateNumber) || plateNumber.Length != 7)
-            throw new ArgumentException("plateNumber must be 7 characters");
-
-        if (year < 1990 || year > DateTime.UtcNow.Year + 1)
-            throw new ArgumentException("Invalid year");
-
         return new Vehicle
         {
             Make = make,
