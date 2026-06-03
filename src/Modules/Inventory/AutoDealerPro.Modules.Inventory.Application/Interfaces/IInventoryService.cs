@@ -1,24 +1,24 @@
-using AutoDealerPro.Modules.Inventory.Application.Requests.AddPhoto;
-using AutoDealerPro.Modules.Inventory.Application.Requests.AddVehicle;
-using AutoDealerPro.Modules.Inventory.Application.Requests.Filter;
-using AutoDealerPro.Modules.Inventory.Application.Requests.MarkAsSold;
-using AutoDealerPro.Modules.Inventory.Application.Requests.UpdateMileage;
-using AutoDealerPro.Modules.Inventory.Application.Requests.UpdatePrice;
-using AutoDealerPro.Modules.Inventory.Application.Responses;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1.AddPhoto;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1.AddVehicle;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1.MarkAsSold;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1.UpdateMileage;
+using AutoDealerPro.Modules.Inventory.Application.Requests.V1.UpdatePrice;
+using AutoDealerPro.Modules.Inventory.Application.Responses.V1;
 
 namespace AutoDealerPro.Modules.Inventory.Application.Interfaces;
 
 public interface IInventoryService
 {
-    Task<IEnumerable<VehicleBasicViewResponse>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12);
-    Task<IEnumerable<VehicleBasicViewResponse>> SearchVehiclesAsync(VehicleFilterRequest filter);
+    Task<IEnumerable<VehicleBasicViewResponseV1>> GetAvailableVehiclesAsync(int page = 1, int pageSize = 12);
+    Task<IEnumerable<VehicleBasicViewResponseV1>> SearchVehiclesAsync(VehicleFilterRequestV1 filter);
 
-    Task<VehicleDetailedViewResponse?> GetVehicleByIdAsync(Guid id);
+    Task<VehicleDetailedViewResponseV1?> GetVehicleByIdAsync(Guid id);
 
-    Task<VehicleStaffViewResponse> CreateVehicleAsync(AddVehicleRequest request);
+    Task<VehicleStaffViewResponseV1> CreateVehicleAsync(AddVehicleRequestV1 request);
 
-    Task UpdatePriceAsync(Guid id, UpdatePriceRequest request);
-    Task UpdateMileageAsync(Guid id, UpdateMileageRequest request);
-    Task AddPhotoAsync(Guid id, AddPhotoRequest request);
-    Task MarkAsSoldAsync(Guid id, MarkAsSoldRequest request);
+    Task UpdatePriceAsync(Guid id, UpdatePriceRequestV1 request);
+    Task UpdateMileageAsync(Guid id, UpdateMileageRequestV1 request);
+    Task AddPhotoAsync(Guid id, AddPhotoRequestV1 request);
+    Task MarkAsSoldAsync(Guid id, MarkAsSoldRequestV1 request);
 }

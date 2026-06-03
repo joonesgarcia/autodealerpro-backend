@@ -1,7 +1,11 @@
 using AutoDealerPro.Modules.Leads.Application.Exceptions;
 using AutoDealerPro.Modules.Leads.Application.Interfaces;
-using AutoDealerPro.Modules.Leads.Application.Requests;
-using AutoDealerPro.Modules.Leads.Application.Response;
+using AutoDealerPro.Modules.Leads.Application.Requests.V1;
+using AutoDealerPro.Modules.Leads.Application.Requests.V1.AddFollowUp;
+using AutoDealerPro.Modules.Leads.Application.Requests.V1.AssignLead;
+using AutoDealerPro.Modules.Leads.Application.Requests.V1.CreateLead;
+using AutoDealerPro.Modules.Leads.Application.Requests.V1.MarkAsContacted;
+using AutoDealerPro.Modules.Leads.Application.Response.V1;
 using AutoDealerPro.Modules.Leads.Core.Entities;
 using AutoDealerPro.Modules.Leads.Core.Enums;
 using AutoDealerPro.Modules.Leads.Core.Repositories;
@@ -12,7 +16,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 {
     private readonly ILeadRepository _repository = repository;
 
-    public async Task<LeadDetailResponse> CreateLeadAsync(CreateLeadRequest request)
+    public async Task<LeadDetailResponseV1> CreateLeadAsync(CreateLeadRequestV1 request)
     {
         Lead? existingLead = await _repository.GetByEmailAsync(request.Email);
         if (existingLead != null)
@@ -39,7 +43,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         return MapToDetailResponse(lead);
     }
 
-    public async Task<LeadDetailResponse> GetLeadByIdAsync(Guid id)
+    public async Task<LeadDetailResponseV1> GetLeadByIdAsync(Guid id)
     {
         Lead? lead = await _repository.GetByIdAsync(id);
         if (lead == null)
@@ -48,13 +52,13 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         return MapToDetailResponse(lead);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetAllLeadsAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponseV1>> GetAllLeadsAsync(int page = 1, int pageSize = 10)
     {
         IEnumerable<Lead> leads = await _repository.GetAllAsync(page, pageSize);
         return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetLeadsByStatusAsync(string status, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponseV1>> GetLeadsByStatusAsync(string status, int page = 1, int pageSize = 10)
     {
         if (!Enum.TryParse<LeadStatus>(status, true, out LeadStatus leadStatus))
             throw new ArgumentException($"Invalid lead status: {status}");
@@ -63,7 +67,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetLeadsByTypeAsync(string type, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponseV1>> GetLeadsByTypeAsync(string type, int page = 1, int pageSize = 10)
     {
         if (!Enum.TryParse<LeadType>(type, true, out LeadType leadType))
             throw new ArgumentException($"Invalid lead type: {type}");
@@ -72,25 +76,25 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetLeadsAssignedToStaffAsync(Guid staffId, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponseV1>> GetLeadsAssignedToStaffAsync(Guid staffId, int page = 1, int pageSize = 10)
     {
         IEnumerable<Lead> leads = await _repository.GetAssignedToStaffAsync(staffId, page, pageSize);
         return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetLeadsByVehicleIdAsync(Guid vehicleId)
+    public async Task<IEnumerable<LeadListResponseV1>> GetLeadsByVehicleIdAsync(Guid vehicleId)
     {
         IEnumerable<Lead> leads = await _repository.GetByVehicleIdAsync(vehicleId);
         return leads.Select(MapToListResponse);
     }
 
-    public async Task<IEnumerable<LeadListResponse>> GetPendingFollowUpsAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<LeadListResponseV1>> GetPendingFollowUpsAsync(int page = 1, int pageSize = 10)
     {
         IEnumerable<Lead> leads = await _repository.GetPendingFollowUpsAsync(page, pageSize);
         return leads.Select(MapToListResponse);
     }
 
-    public async Task AssignLeadToStaffAsync(Guid leadId, AssignLeadRequest request)
+    public async Task AssignLeadToStaffAsync(Guid leadId, AssignLeadRequestV1 request)
     {
         Lead? lead = await _repository.GetByIdAsync(leadId);
         if (lead == null)
@@ -100,7 +104,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         await _repository.UpdateAsync(lead);
     }
 
-    public async Task MarkLeadAsContactedAsync(Guid leadId, MarkAsContactedRequest request)
+    public async Task MarkLeadAsContactedAsync(Guid leadId, MarkAsContactedRequestV1 request)
     {
         Lead? lead = await _repository.GetByIdAsync(leadId);
         if (lead == null)
@@ -110,7 +114,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         await _repository.UpdateAsync(lead);
     }
 
-    public async Task AddFollowUpAsync(Guid leadId, AddFollowUpRequest request)
+    public async Task AddFollowUpAsync(Guid leadId, AddFollowUpRequestV1 request)
     {
         Lead? lead = await _repository.GetByIdAsync(leadId);
         if (lead == null)
@@ -120,7 +124,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         await _repository.UpdateAsync(lead);
     }
 
-    public async Task CloseLeadAsync(Guid leadId, CloseLeadRequest request)
+    public async Task CloseLeadAsync(Guid leadId, CloseLeadRequestv1 request)
     {
         Lead? lead = await _repository.GetByIdAsync(leadId);
         if (lead == null)
@@ -131,16 +135,16 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
     }
 
     // Helper methods
-    private static LeadDetailResponse MapToDetailResponse(Lead lead)
+    private static LeadDetailResponseV1 MapToDetailResponse(Lead lead)
     {
-        List<FollowUpResponse> followUpResponses = lead.FollowUps.Select(f => new FollowUpResponse(
+        List<FollowUpResponseV1> followUpResponses = lead.FollowUps.Select(f => new FollowUpResponseV1(
             f.Id,
             f.Notes,
             f.CreatedAt,
             f.NextFollowUpDate
         )).ToList();
 
-        return new LeadDetailResponse(
+        return new LeadDetailResponseV1(
             lead.Id,
             lead.FirstName,
             lead.LastName,
@@ -163,9 +167,9 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
         );
     }
 
-    private static LeadListResponse MapToListResponse(Lead lead)
+    private static LeadListResponseV1 MapToListResponse(Lead lead)
     {
-        return new LeadListResponse(
+        return new LeadListResponseV1(
             lead.Id,
             lead.FirstName,
             lead.LastName,

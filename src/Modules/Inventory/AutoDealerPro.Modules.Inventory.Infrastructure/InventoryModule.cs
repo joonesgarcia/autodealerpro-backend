@@ -1,7 +1,7 @@
 ﻿using AutoDealerPro.Modules.Inventory.Application.Interfaces;
 using AutoDealerPro.Modules.Inventory.Application.Services;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
-using AutoDealerPro.Modules.Inventory.Infrastructure.Endpoints;
+using AutoDealerPro.Modules.Inventory.Infrastructure.Endpoints.V1;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Inventory.Infrastructure.Repositories;
 using AutoDealerPro.Shared.Abstractions.Modules;
