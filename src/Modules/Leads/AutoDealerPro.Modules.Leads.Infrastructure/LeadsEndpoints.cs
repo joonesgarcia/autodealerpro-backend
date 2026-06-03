@@ -27,7 +27,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
                 LeadDetailResponse result = await service.CreateLeadAsync(request);
                 return Results.Created($"/api/leads/{result.Id}", result);
             })
-                .AllowAnonymous()
+                .RequireAuthorization("StaffOnly")
                 .WithName("CreateLead")
                 .WithSummary("Submit a new lead (customer)")
                 .Produces<LeadDetailResponse>(201)
@@ -45,7 +45,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure
                     return Results.NotFound();
                 }
             })
-                .AllowAnonymous()
+                .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadById")
                 .WithSummary("Get lead details")
                 .Produces<LeadDetailResponse>()
