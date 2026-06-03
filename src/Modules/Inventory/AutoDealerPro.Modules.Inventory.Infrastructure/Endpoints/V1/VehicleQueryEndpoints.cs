@@ -23,7 +23,7 @@ public static class VehicleQueryEndpoints
         .AllowAnonymous()
         .WithName("GetAvailableVehicles")
         .WithSummary("Browse available vehicles")
-        .Produces<IEnumerable<VehicleBasicViewResponseV1>>();
+        .Produces<IEnumerable<VehicleBasicViewResponseV1>>(200);
 
         group.MapGet("{id:guid}", async (Guid id, [FromServices] IInventoryService service) =>
         {
@@ -45,6 +45,6 @@ public static class VehicleQueryEndpoints
         .AllowAnonymous()
         .WithName("SearchVehicles")
         .WithSummary("Search and filter vehicles")
-        .Produces<IEnumerable<VehicleBasicViewResponseV1>>();
+        .Produces<IEnumerable<VehicleBasicViewResponseV1>>(200);
     }
 }

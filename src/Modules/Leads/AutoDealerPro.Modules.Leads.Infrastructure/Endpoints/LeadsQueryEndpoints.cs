@@ -31,7 +31,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadById")
                 .WithSummary("Get lead details")
-                .Produces<LeadDetailResponseV1>()
+                .Produces<LeadDetailResponseV1>(200)
                 .Produces(404);
 
             group.MapGet("", async ([FromServices] ILeadsService service, int page, int pageSize) =>
@@ -42,7 +42,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetAllLeads")
                 .WithSummary("Get all leads (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
 
             group.MapGet("status/{status}", async (string status, [FromServices] ILeadsService service, int page, int pageSize) =>
@@ -60,7 +60,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByStatus")
                 .WithSummary("Get leads by status (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
 
             group.MapGet("type/{type}", async (string type, [FromServices] ILeadsService service, int page, int pageSize) =>
@@ -78,7 +78,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByType")
                 .WithSummary("Get leads by type (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
 
             group.MapGet("staff/{staffId:guid}", async (Guid staffId, [FromServices] ILeadsService service, int page, int pageSize) =>
@@ -89,7 +89,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsAssignedToStaff")
                 .WithSummary("Get leads assigned to staff member (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
 
             group.MapGet("vehicle/{vehicleId:guid}", async (Guid vehicleId, [FromServices] ILeadsService service) =>
@@ -100,7 +100,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetLeadsByVehicle")
                 .WithSummary("Get all leads for a vehicle (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
 
             group.MapGet("pending-followups", async ([FromServices] ILeadsService service, int page, int pageSize) =>
@@ -111,7 +111,7 @@ namespace AutoDealerPro.Modules.Leads.Infrastructure.Endpoints
                 .RequireAuthorization("StaffOnly")
                 .WithName("GetPendingFollowUps")
                 .WithSummary("Get leads with pending follow-ups (staff only)")
-                .Produces<IEnumerable<LeadListResponseV1>>()
+                .Produces<IEnumerable<LeadListResponseV1>>(200)
                 .Produces(401);
         }
     }
