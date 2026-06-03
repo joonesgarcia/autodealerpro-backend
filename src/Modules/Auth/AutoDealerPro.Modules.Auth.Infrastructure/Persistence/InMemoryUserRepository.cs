@@ -1,6 +1,6 @@
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.CreateAccount;
 using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using Microsoft.AspNetCore.Identity;
 
@@ -26,7 +26,7 @@ public class InMemoryUserRepository : IUserRepository
     public async Task<User?> GetBy(string username) =>
         await Task.FromResult(_users.FirstOrDefault(u => u.Username == username));
 
-    public async Task<AccountCreationValidationStatus> ValidateAccountCreation(CreateAccountRequest createAccountRequest)
+    public async Task<AccountCreationValidationStatus> ValidateAccountCreation(CreateAccountRequestV1 createAccountRequest)
     {
         bool validEmail = await IsValidEmail(createAccountRequest.Email);
         if (!validEmail) return await Task.FromResult(AccountCreationValidationStatus.EmailTaken);

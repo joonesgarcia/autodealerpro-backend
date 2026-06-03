@@ -8,6 +8,7 @@ using AutoDealerPro.Modules.Inventory.Application.Requests.V1.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Responses.V1;
 using AutoDealerPro.Modules.Inventory.Core.Entities;
 using AutoDealerPro.Modules.Inventory.Core.Events;
+using AutoDealerPro.Modules.Inventory.Core.Events.V1;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Shared.Abstractions.Events;
 
@@ -109,6 +110,6 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
         // Publish after persisting — any module that cares about this fact reacts here.
         // In-process now; swap dispatcher for a broker impl when extracting to microservices.
-        await _eventDispatcher.Publish(new VehicleSoldEvent(vehicle.Id, request.SellingPrice));
+        await _eventDispatcher.Publish(new VehicleSoldEventV1(vehicle.Id, request.SellingPrice));
     }
 }

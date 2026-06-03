@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
+namespace AutoDealerPro.Modules.Auth.Core.Requests.V1.CreateAccount;
 
-public class CreateAccountValidator : AbstractValidator<CreateAccountRequest>
+public class CreateAccountValidatorV1 : AbstractValidator<CreateAccountRequestV1>
 {
-    public CreateAccountValidator()
+    public CreateAccountValidatorV1()
     {
         RuleFor(x => x.Username)
             .NotEmpty()

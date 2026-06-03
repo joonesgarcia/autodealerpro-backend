@@ -1,8 +1,8 @@
 ﻿using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
-using AutoDealerPro.Modules.Auth.Core.Requests.Login;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.Login;
 using AutoDealerPro.Modules.Auth.Core.Result;
 using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +14,7 @@ public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtT
     private readonly IJwtTokenGenerator _jwtTokenGenerator = jwtTokenGenerator;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
-    public async Task<CreateAccountResult> HandleCreateAccount(CreateAccountRequest createAccountRequest)
+    public async Task<CreateAccountResult> HandleCreateAccount(CreateAccountRequestV1 createAccountRequest)
     {
         AccountCreationValidationStatus validationResult = await _userRepository.ValidateAccountCreation(createAccountRequest);
 
@@ -37,7 +37,7 @@ public class AuthService(IUserRepository userRepository, IJwtTokenGenerator jwtT
         return new CreateAccountResult(true, validationResult);
     }
 
-    public async Task<LoginResult> HandleLogin(LoginRequest loginRequest)
+    public async Task<LoginResult> HandleLogin(LoginRequestV1 loginRequest)
     {
         User? user = await _userRepository.GetBy(loginRequest.Username);
         if (user == null) return new LoginResult(LoginStatus.InvalidCredentials, null);

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace AutoDealerPro.Modules.Auth.Core.Requests.Login;
+namespace AutoDealerPro.Modules.Auth.Core.Requests.V1.Login;
 
-public class LoginValidator : AbstractValidator<LoginRequest>
+public class LoginValidatorV1 : AbstractValidator<LoginRequestV1>
 {
-    public LoginValidator()
+    public LoginValidatorV1()
     {
         RuleFor(x => x.Username)
             .NotEmpty()

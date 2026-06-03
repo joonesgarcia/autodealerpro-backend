@@ -1,8 +1,8 @@
 using AutoDealerPro.Modules.Auth.Core.Entities;
 using AutoDealerPro.Modules.Auth.Core.Interface;
 using AutoDealerPro.Modules.Auth.Core.Repositories;
-using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
-using AutoDealerPro.Modules.Auth.Core.Requests.Login;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.Login;
 using AutoDealerPro.Modules.Auth.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Auth.Infrastructure.Services;
 using AutoDealerPro.Modules.Auth.Infrastructure.Util;
@@ -32,7 +32,7 @@ public class AuthModule : IModule
 
         services.AddScoped<IAuthService, AuthService>();
 
-        services.AddScoped<IValidator<CreateAccountRequest>, CreateAccountValidator>();
-        services.AddScoped<IValidator<LoginRequest>, LoginValidator>();
+        services.AddScoped<IValidator<CreateAccountRequestV1>, CreateAccountValidatorV1>();
+        services.AddScoped<IValidator<LoginRequestV1>, LoginValidatorV1>();
     }
 }

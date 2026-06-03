@@ -1,6 +1,6 @@
 using AutoDealerPro.Modules.Auth.Core.Interface;
-using AutoDealerPro.Modules.Auth.Core.Requests.CreateAccount;
-using AutoDealerPro.Modules.Auth.Core.Requests.Login;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.CreateAccount;
+using AutoDealerPro.Modules.Auth.Core.Requests.V1.Login;
 using AutoDealerPro.Modules.Auth.Core.Result.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +15,7 @@ public static class AuthEndpoints
     {
         RouteGroupBuilder group = endpoints.MapGroup("/api/auth").WithTags("Auth");
 
-        group.MapPost("/login", async (LoginRequest request, IAuthService service, IValidator<LoginRequest> validator) =>
+        group.MapPost("/login", async (LoginRequestV1 request, IAuthService service, IValidator<LoginRequestV1> validator) =>
         {
             FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
 
@@ -31,7 +31,7 @@ public static class AuthEndpoints
         .AllowAnonymous()
         .WithName("Login");
 
-        group.MapPost("/register", async (CreateAccountRequest request, IAuthService service, IValidator<CreateAccountRequest> validator) =>
+        group.MapPost("/register", async (CreateAccountRequestV1 request, IAuthService service, IValidator<CreateAccountRequestV1> validator) =>
         {
             FluentValidation.Results.ValidationResult validation = await validator.ValidateAsync(request);
 
