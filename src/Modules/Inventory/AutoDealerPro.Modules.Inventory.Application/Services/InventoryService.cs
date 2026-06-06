@@ -7,7 +7,6 @@ using AutoDealerPro.Modules.Inventory.Application.Requests.V1.UpdateMileage;
 using AutoDealerPro.Modules.Inventory.Application.Requests.V1.UpdatePrice;
 using AutoDealerPro.Modules.Inventory.Application.Responses.V1;
 using AutoDealerPro.Modules.Inventory.Core.Entities;
-using AutoDealerPro.Modules.Inventory.Core.Events;
 using AutoDealerPro.Modules.Inventory.Core.Events.V1;
 using AutoDealerPro.Modules.Inventory.Core.Repositories;
 using AutoDealerPro.Shared.Abstractions.Events;

@@ -44,7 +44,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 
     public async Task<LeadDetailResponseV1> GetLeadByIdAsync(Guid id)
     {
-        Lead? lead = await _repository.GetByIdAsync(id) ?? 
+        Lead? lead = await _repository.GetByIdAsync(id) ??
             throw new LeadNotFoundException(id);
         return lead.ToDetailResponse();
     }
@@ -93,7 +93,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 
     public async Task AssignLeadToStaffAsync(Guid leadId, AssignLeadRequestV1 request)
     {
-        Lead? lead = await _repository.GetByIdAsync(leadId) ?? 
+        Lead? lead = await _repository.GetByIdAsync(leadId) ??
             throw new LeadNotFoundException(leadId);
 
         lead.AssignToStaff(request.StaffId);
@@ -102,7 +102,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 
     public async Task MarkLeadAsContactedAsync(Guid leadId, MarkAsContactedRequestV1 request)
     {
-        Lead? lead = await _repository.GetByIdAsync(leadId) ?? 
+        Lead? lead = await _repository.GetByIdAsync(leadId) ??
             throw new LeadNotFoundException(leadId);
 
         lead.MarkAsContacted(request.Notes);
@@ -111,7 +111,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 
     public async Task AddFollowUpAsync(Guid leadId, AddFollowUpRequestV1 request)
     {
-        Lead? lead = await _repository.GetByIdAsync(leadId) ?? 
+        Lead? lead = await _repository.GetByIdAsync(leadId) ??
             throw new LeadNotFoundException(leadId);
 
         lead.AddFollowUp(request.Note, request.NextFollowUpDate);
@@ -120,7 +120,7 @@ public class LeadsService(ILeadRepository repository) : ILeadsService
 
     public async Task CloseLeadAsync(Guid leadId, CloseLeadRequestv1 request)
     {
-        Lead? lead = await _repository.GetByIdAsync(leadId) ?? 
+        Lead? lead = await _repository.GetByIdAsync(leadId) ??
             throw new LeadNotFoundException(leadId);
 
         lead.MarkAsClosed(request.Converted);

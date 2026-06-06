@@ -1,15 +1,12 @@
 using AutoDealerPro.Modules.Auth.Infrastructure;
 using AutoDealerPro.Modules.Inventory.Infrastructure;
-using AutoDealerPro.Modules.Inventory.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Leads.Infrastructure;
-using AutoDealerPro.Modules.Leads.Infrastructure.Persistence;
 using AutoDealerPro.Shared.Abstractions.Events;
 using AutoDealerPro.Shared.Abstractions.Filter;
 using AutoDealerPro.Shared.Abstractions.Modules;
 using AutoDealerPro.Shared.Infrastructure.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
