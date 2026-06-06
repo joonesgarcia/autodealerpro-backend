@@ -6,9 +6,8 @@ public class AddFollowUpValidatorV1 : AbstractValidator<AddFollowUpRequestV1>
 {
     public AddFollowUpValidatorV1()
     {
-        RuleFor(x => x.Notes)
-            .NotEmpty().WithMessage("Notes are required")
-            .MaximumLength(500).WithMessage("Notes cannot exceed 500 characters");
+        RuleFor(x => x.Note)
+            .NotEmpty().WithMessage("Notes are required");
 
         RuleFor(x => x.NextFollowUpDate)
             .GreaterThan(DateTime.UtcNow).WithMessage("Next follow-up date must be in the future")

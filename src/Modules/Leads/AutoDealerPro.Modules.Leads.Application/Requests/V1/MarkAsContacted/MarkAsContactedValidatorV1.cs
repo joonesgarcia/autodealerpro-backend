@@ -7,7 +7,6 @@ public class MarkAsContactedValidatorV1 : AbstractValidator<MarkAsContactedReque
     public MarkAsContactedValidatorV1()
     {
         RuleFor(x => x.Notes)
-            .NotEmpty().WithMessage("Notes are required")
-            .MaximumLength(500).WithMessage("Notes cannot exceed 500 characters");
+            .NotEmpty().WithMessage("Notes are required");
     }
 }

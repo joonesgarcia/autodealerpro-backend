@@ -34,10 +34,19 @@ public class Lead : EntityBase
 
     public static Lead Create(
         string firstName, string lastName, string email, string phone,
-        Guid vehicleId, LeadType type, string message,
+        Guid vehicleId, string type, string message,
         string? tradeInMake = null, string? tradeInModel = null,
         int? tradeInYear = null, int? tradeInMileage = null, LeadPriority leadPriority = LeadPriority.Low)
     {
+        ValidateFirstName(firstName);
+        ValidateLastName(lastName);
+        ValidateEmail(email);
+        ValidatePhone(phone);
+        ValidateLeadType(type);
+        ValidateMessage(message);
+        ValidateTradeInYear(tradeInYear);
+        ValidateTradeInMileage(tradeInMileage);
+
         return new Lead
         {
             FirstName = firstName,
@@ -45,7 +54,7 @@ public class Lead : EntityBase
             Email = email.ToLowerInvariant(),
             Phone = phone,
             VehicleId = vehicleId,
-            Type = type,
+            Type = Enum.Parse<LeadType>(type),
             Status = LeadStatus.New,
             Message = message,
             TradeInMake = tradeInMake,
@@ -71,6 +80,8 @@ public class Lead : EntityBase
 
     public void MarkAsContacted(string notes)
     {
+        ValidateContactNotes(notes);
+
         Status = LeadStatus.Contacted;
         ContactedAt = DateTime.UtcNow;
         StaffNotes = notes;
@@ -79,14 +90,8 @@ public class Lead : EntityBase
 
     public void AddFollowUp(string notes, DateTime? nextFollowUpDate = null)
     {
-        FollowUp followUp = new FollowUp
-        {
-            //Id = Guid.NewGuid(), let DB create the PK, otherwise it will generate error
-            LeadId = Id,
-            Notes = notes,
-            CreatedAt = DateTime.UtcNow,
-            NextFollowUpDate = nextFollowUpDate
-        };
+        FollowUp followUp = FollowUp.Create(notes, nextFollowUpDate);
+
         FollowUps.Add(followUp);
         UpdatedAt = DateTime.UtcNow;
     }
@@ -96,4 +101,70 @@ public class Lead : EntityBase
         Status = converted ? LeadStatus.Converted : LeadStatus.Lost;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    #region ::: validations :::
+    private static void ValidateContactNotes(string notes)
+    {
+        if (notes.Length > 500)
+            throw new ArgumentException("Follow-up notes cannot exceed 500 characters", nameof(notes));
+    }
+
+    private static void ValidateFirstName(string firstName)
+    {
+        if (firstName.Length > 100)
+            throw new ArgumentException("First name cannot exceed 100 characters", nameof(firstName));
+    }
+
+    private static void ValidateLastName(string lastName)
+    {
+        if (lastName.Length > 100)
+            throw new ArgumentException("Last name cannot exceed 100 characters", nameof(lastName));
+    }
+
+    private static void ValidateEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            if (addr.Address != email)
+                throw new ArgumentException("Email format is invalid", nameof(email));
+        }
+        catch
+        {
+            throw new ArgumentException("Email format is invalid", nameof(email));
+        }
+    }
+
+    private static void ValidatePhone(string phone)
+    {
+        if (!System.Text.RegularExpressions.Regex.IsMatch(phone, @"^\+?[\d\s\-()]{10,}$"))
+            throw new ArgumentException("Phone format is invalid", nameof(phone));
+    }
+
+    private static void ValidateLeadType(string type)
+    {
+        if (!Enum.TryParse<LeadType>(type, true, out _))
+            throw new ArgumentException("Invalid lead type. Valid types: GeneralInquiry, TestDrive, TradeIn", nameof(type));
+    }
+
+    private static void ValidateMessage(string message)
+    {
+        if (message.Length > 1000)
+            throw new ArgumentException("Message cannot exceed 1000 characters", nameof(message));
+    }
+
+    private static void ValidateTradeInYear(int? tradeInYear)
+    {
+        if (tradeInYear.HasValue && (tradeInYear < 1900 || tradeInYear > DateTime.UtcNow.Year))
+            throw new ArgumentException($"Trade-in year must be between 1900 and {DateTime.UtcNow.Year}", nameof(tradeInYear));
+    }
+
+    private static void ValidateTradeInMileage(int? tradeInMileage)
+    {
+        if (tradeInMileage.HasValue && tradeInMileage < 0)
+            throw new ArgumentException("Trade-in mileage cannot be negative", nameof(tradeInMileage));
+    }
+
+
+    #endregion
 }
