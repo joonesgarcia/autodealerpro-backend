@@ -41,6 +41,11 @@ public class Vehicle : EntityBase
         string transmission, string fuelType, string bodyType,
         decimal purchasePrice, decimal askingPrice, string? notes = null)
     {
+        ValidateYear(year);
+        ValidateMileage(mileage);
+        ValidatePurchasePrice(purchasePrice);
+        ValidateAskingPrice(askingPrice);
+
         return new Vehicle
         {
             Make = make,
@@ -63,12 +68,15 @@ public class Vehicle : EntityBase
 
     public void UpdatePrice(decimal newAskingPrice)
     {
+        ValidateAskingPrice(newAskingPrice);
         AskingPrice = newAskingPrice;
         UpdatedAt = DateTime.UtcNow;
     }
 
     public void UpdateMileage(int newMileage)
     {
+        ValidateMileage(newMileage);
+
         if (newMileage < Mileage)
             throw new InvalidOperationException("Cannot decrease mileage");
 
@@ -78,6 +86,8 @@ public class Vehicle : EntityBase
 
     public void MarkAsSold(decimal sellingPrice)
     {
+        ValidateSellingPrice(sellingPrice);
+
         if (Status == VehicleStatus.Sold)
             throw new InvalidOperationException("Vehicle already sold");
 
@@ -89,6 +99,8 @@ public class Vehicle : EntityBase
 
     public void AddPhoto(string photoUrl)
     {
+        ValidatePhotoUrl(photoUrl);
+
         if (PhotoUrls.Count >= 15)
             throw new InvalidOperationException("Maximum 15 photos allowed");
 
@@ -100,6 +112,45 @@ public class Vehicle : EntityBase
     {
         ViewCount++;
     }
+
+    #region ::: validations :::
+    private static void ValidateYear(int year)
+    {
+        if (year < 1900 || year > DateTime.Now.Year + 1)
+            throw new ArgumentException($"Year must be between 1900 and {DateTime.Now.Year + 1}", nameof(year));
+    }
+
+    private static void ValidateMileage(int mileage)
+    {
+        if (mileage < 0)
+            throw new ArgumentException("Mileage must be greater than or equal to 0", nameof(mileage));
+    }
+
+    private static void ValidatePurchasePrice(decimal purchasePrice)
+    {
+        if (purchasePrice <= 0)
+            throw new ArgumentException("Purchase price must be greater than 0", nameof(purchasePrice));
+    }
+
+    private static void ValidateAskingPrice(decimal askingPrice)
+    {
+        if (askingPrice <= 0)
+            throw new ArgumentException("Asking price must be greater than 0", nameof(askingPrice));
+    }
+
+    private static void ValidateSellingPrice(decimal sellingPrice)
+    {
+        if (sellingPrice <= 0)
+            throw new ArgumentException("Selling price must be greater than 0", nameof(sellingPrice));
+    }
+
+    private static void ValidatePhotoUrl(string photoUrl)
+    {
+        if (!Uri.TryCreate(photoUrl, UriKind.Absolute, out _))
+            throw new ArgumentException("Photo URL must be a valid absolute URI", nameof(photoUrl));
+    }
+
+    #endregion
 }
 
 public enum VehicleStatus
