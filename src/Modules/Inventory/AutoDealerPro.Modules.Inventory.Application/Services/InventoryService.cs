@@ -82,7 +82,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task UpdatePriceAsync(Guid id, UpdatePriceRequestV1 request)
     {
-        Vehicle? vehicle = await _repository.GetByIdAsync(id) ?? 
+        Vehicle? vehicle = await _repository.GetByIdAsync(id) ??
             throw new ArgumentException("Vehicle not found");
 
         vehicle.UpdatePrice(request.NewPrice);
@@ -91,7 +91,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task UpdateMileageAsync(Guid id, UpdateMileageRequestV1 request)
     {
-        Vehicle? vehicle = await _repository.GetByIdAsync(id) ?? 
+        Vehicle? vehicle = await _repository.GetByIdAsync(id) ??
             throw new ArgumentException("Vehicle not found");
 
         vehicle.UpdateMileage(request.NewMileage);
@@ -100,7 +100,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task AddPhotoAsync(Guid id, AddPhotoRequestV1 request)
     {
-        Vehicle? vehicle = await _repository.GetByIdAsync(id) ?? 
+        Vehicle? vehicle = await _repository.GetByIdAsync(id) ??
             throw new ArgumentException("Vehicle not found");
 
         vehicle.AddPhoto(request.PhotoUrl);
@@ -109,7 +109,7 @@ public class InventoryService(IVehicleRepository repository, IEventDispatcher ev
 
     public async Task MarkAsSoldAsync(Guid id, MarkAsSoldRequestV1 request)
     {
-        Vehicle? vehicle = await _repository.GetByIdAsync(id) ?? 
+        Vehicle? vehicle = await _repository.GetByIdAsync(id) ??
             throw new ArgumentException("Vehicle not found");
 
         vehicle.MarkAsSold(request.SellingPrice);

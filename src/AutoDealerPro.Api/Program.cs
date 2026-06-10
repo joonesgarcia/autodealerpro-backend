@@ -1,5 +1,6 @@
 using AutoDealerPro.Modules.Auth.Infrastructure;
 using AutoDealerPro.Modules.Inventory.Infrastructure;
+using AutoDealerPro.Modules.Leads.Application.V1.Commands.CreateLead;
 using AutoDealerPro.Modules.Leads.Infrastructure;
 using AutoDealerPro.Shared.Abstractions.Events;
 using AutoDealerPro.Shared.Abstractions.Filter;
@@ -47,7 +48,11 @@ builder.Services.AddSwaggerGen(c =>
 
 #region ::: Events :::
 // Intra-modules communication
-// Replace for RabbitMqEventDispatcher/AzureServiceBusEventDispatcher in future
+
+// This needs to be changed to outbox pattern in the future.
+// If inventory wants to notify leads module about a vehicle being sold,
+// it should publish an event to the outbox, and then a separate process should read that event and handle it.
+
 builder.Services.AddScoped<IEventDispatcher, InProcessEventDispatcher>();
 #endregion
 
@@ -62,6 +67,10 @@ List<IModule> modules =
     new AuthModule()
 ];
 modules.ForEach(module => module.Register(builder.Services, builder.Configuration));
+
+builder.Services.AddMediatR(cfg =>
+       cfg.RegisterServicesFromAssembly(typeof(CreateLeadV1Command).Assembly));
+
 #endregion
 
 #region ::: Authentication :::

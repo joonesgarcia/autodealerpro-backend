@@ -1,8 +1,6 @@
 ﻿using AutoDealerPro.Modules.Inventory.Core.Events.V1;
-using AutoDealerPro.Modules.Leads.Application.Interfaces;
-using AutoDealerPro.Modules.Leads.Application.Services;
 using AutoDealerPro.Modules.Leads.Core.Repositories;
-using AutoDealerPro.Modules.Leads.Infrastructure.Endpoints;
+using AutoDealerPro.Modules.Leads.Infrastructure.Endpoints.Queries;
 using AutoDealerPro.Modules.Leads.Infrastructure.EventHandlers.V1;
 using AutoDealerPro.Modules.Leads.Infrastructure.Persistence;
 using AutoDealerPro.Modules.Leads.Infrastructure.Repositories;
@@ -31,9 +29,6 @@ public class LeadsModule : IModule
 
         // Repositories
         services.AddScoped<ILeadRepository, LeadRepository>();
-
-        // Services
-        services.AddScoped<ILeadsService, LeadsService>();
 
         // Event Handlers
         services.AddScoped<IDomainEventHandler<VehicleSoldEventV1>, CloseLeadsOnVehicleSoldV1>();
